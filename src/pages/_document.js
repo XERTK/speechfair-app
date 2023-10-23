@@ -28,10 +28,6 @@ const Fonts = () => (
       rel="stylesheet"
       href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@600;700&display=swap"
     />
-    <link
-      rel="stylesheet"
-      href="https://fonts.googleapis.com/css2?family=Chronicle+Disp:wght@300&display=swap"
-    />
   </>
 );
 
