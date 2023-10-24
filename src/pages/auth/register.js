@@ -31,6 +31,7 @@ import { Link as ScrollLink, Element } from "react-scroll";
 import PhoneInput, { isValidPhoneNumber } from "react-phone-number-input";
 import "react-phone-number-input/style.css"; // This imports the default CSS styles.
 import MuiPhoneNumber from "material-ui-phone-number";
+const newBackgroudImg = "/assets/auth-illustration.jpg"; // Relative path
 
 const Page = () => {
   const router = useRouter();
@@ -72,9 +73,9 @@ const Page = () => {
         );
         //   router.push("/");
       } catch (err) {
-        // helpers.setStatus({ success: false });
-        // helpers.setErrors({ submit: err.message });
-        // helpers.setSubmitting(false);
+        helpers.setStatus({ success: false });
+        helpers.setErrors({ submit: err.message });
+        helpers.setSubmitting(false);
         console.log(err.message);
       }
     },
@@ -373,6 +374,6 @@ const Page = () => {
   );
 };
 
-Page.getLayout = (page) => <AuthLayout>{page}</AuthLayout>;
+Page.getLayout = (page) => <AuthLayout backgroundImage={newBackgroudImg}>{page}</AuthLayout>;
 
 export default Page;
