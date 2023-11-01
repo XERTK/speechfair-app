@@ -54,12 +54,12 @@ const Page = () => {
       try {
         console.log("sigIn attempt");
 
-        await auth.sigin(values.email, values.password);
-        //   router.push("/");
+        await auth.signIn(values.email, values.password);
+        router.push("/");
       } catch (err) {
-        // helpers.setStatus({ success: false });
-        // helpers.setErrors({ submit: err.message });
-        // helpers.setSubmitting(false);
+        helpers.setStatus({ success: false });
+        helpers.setErrors({ submit: err.message });
+        helpers.setSubmitting(false);
         console.log(err.message);
       }
     },
@@ -230,9 +230,7 @@ const Page = () => {
     </>
   );
 };
-{
-  console.log(newBackgroudImg);
-}
+
 Page.getLayout = (page) => <AuthLayout backgroundImage={newBackgroudImg}>{page}</AuthLayout>;
 
 export default Page;

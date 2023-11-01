@@ -1,16 +1,49 @@
-import PropTypes from "prop-types";
-import NextLink from "next/link";
-import { Box, Typography, Unstable_Grid2 as Grid } from "@mui/material";
-import { Logo } from "src/components/logo";
+import { useCallback, useEffect, useState } from "react";
+import { usePathname } from "next/navigation";
+import { styled } from "@mui/material/styles";
+import { withAuthGuard } from "src/hocs/with-auth-guard";
+import { TopNav } from "./top-nav";
 
-// TODO: Change subtitle text
+const SIDE_NAV_WIDTH = 280;
+
+const LayoutRoot = styled("div")(({ theme }) => ({
+  display: "flex",
+  flex: "1 1 auto",
+  maxWidth: "100%",
+}));
+
+const LayoutContainer = styled("div")({
+  display: "flex",
+  flex: "1 1 auto",
+  flexDirection: "column",
+  width: "100%",
+});
 
 export const Layout = (props) => {
   const { children } = props;
+  const pathname = usePathname();
+  const [openNav, setOpenNav] = useState(false);
 
-  return <>{children}</>;
-};
+  const handlePathnameChange = useCallback(() => {
+    if (openNav) {
+      setOpenNav(false);
+    }
+  }, [openNav]);
 
-Layout.prototypes = {
-  children: PropTypes.node,
+  useEffect(
+    () => {
+      handlePathnameChange();
+    },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [pathname]
+  );
+
+  return (
+    <>
+      <TopNav onNavOpen={() => setOpenNav(true)} />
+      <LayoutRoot>
+        <LayoutContainer>{children}</LayoutContainer>
+      </LayoutRoot>
+    </>
+  );
 };

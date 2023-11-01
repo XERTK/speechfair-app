@@ -1,0 +1,166 @@
+import { Avatar, IconButton, Stack, Typography } from "@mui/material";
+import PropTypes from "prop-types";
+import MenuIcon from "@mui/icons-material/Menu";
+import PowerIcon from "@mui/icons-material/PowerSettingsNew";
+import BellIcon from "@heroicons/react/24/solid/BellIcon";
+import UsersIcon from "@heroicons/react/24/solid/UsersIcon";
+import Bars3Icon from "@heroicons/react/24/solid/Bars3Icon";
+import TwitterIcon from "@mui/icons-material/Twitter";
+import LinkedInIcon from "@mui/icons-material/LinkedIn";
+import FacebookOutlinedIcon from "@mui/icons-material/FacebookOutlined";
+import MagnifyingGlassIcon from "@heroicons/react/24/solid/MagnifyingGlassIcon";
+import WhatsAppIcon from "@mui/icons-material/WhatsApp";
+import twitterLogo from "../../../public/assets/twitter-xxl.png";
+import { WhatshotSharp } from "@mui/icons-material";
+import styled from "@emotion/styled";
+import TelegramIcon from "@mui/icons-material/Telegram";
+import YouTubeIcon from "@mui/icons-material/YouTube";
+import TicktokIcon from "@mui/icons-material/YouTube";
+
+const SocialIconButton = styled(IconButton)(({ theme, ownerState }) => {
+  return {
+    backgroundColor: "#333333",
+  };
+});
+
+export const TopNav = (props) => {
+  return (
+    <div
+      style={{
+        textAlign: "center",
+        boxShadow: "0px 0px 10px rgba(0, 0, 0, 0.5)",
+      }}
+    >
+      <Stack direction="row" alignItems="center">
+        <div
+          style={{
+            display: "flex",
+            alignItems: "left",
+            flexGrow: "1",
+            paddingBottom: "5px",
+            borderBottom: "1px solid black",
+            paddingLeft: "10px",
+          }}
+        >
+          <MenuIcon
+            sx={{
+              color: "black",
+              fontSize: "30px",
+            }}
+          />
+        </div>
+        <h1
+          style={{
+            display: "flex",
+            flexGrow: "1",
+            justifyContent: "center",
+          }}
+        >
+          The Speech Fair
+        </h1>
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "right",
+            flexGrow: "1",
+            paddingBottom: "5px",
+            borderBottom: "1px solid black",
+            paddingRight: "10px",
+          }}
+        >
+          <PowerIcon
+            sx={{
+              color: "red",
+              fontSize: "30px",
+            }}
+          />
+        </div>
+      </Stack>
+      Still Your Home For Speech, Today, Monday, 30 October, 2023
+      <Stack
+        direction="row"
+        justifyContent="space-between"
+        alignItems="flex-start"
+        spacing={2}
+        padding="10px"
+      >
+        <body1>Digest Your World</body1>
+        <Stack alignItems="center" direction="row" spacing={1}>
+          <Typography
+            variant="body2"
+            sx={{
+              display: "flex",
+              alignItems: "center",
+              color: "#000000",
+              fontSize: 16,
+              fontWeight: "bold",
+            }}
+          >
+            In case you’re lost 😊, follow us on:
+          </Typography>
+
+          <SocialIconButton size="small">
+            <FacebookOutlinedIcon
+              sx={{
+                color: "white",
+                fontSize: "12.61px",
+              }}
+            />
+          </SocialIconButton>
+          <SocialIconButton size="small">
+            <WhatsAppIcon
+              sx={{
+                color: "white",
+                fontSize: "12.61px",
+              }}
+            />
+          </SocialIconButton>
+          <SocialIconButton size="small">
+            <LinkedInIcon
+              sx={{
+                color: "white",
+                fontSize: "12.61px",
+              }}
+            />
+          </SocialIconButton>
+          <SocialIconButton size="small">
+            <TwitterIcon
+              sx={{
+                color: "white",
+                fontSize: "12.61px",
+              }}
+            />
+          </SocialIconButton>
+          <SocialIconButton size="small">
+            <TelegramIcon
+              sx={{
+                color: "white",
+                fontSize: "12.61px",
+              }}
+            />
+          </SocialIconButton>
+          <SocialIconButton size="small">
+            <YouTubeIcon
+              sx={{
+                color: "white",
+                fontSize: "12.61px",
+              }}
+            />
+          </SocialIconButton>
+          <SocialIconButton size="small">
+            <TicktokIcon
+              sx={{
+                color: "white",
+                fontSize: "12.61px",
+              }}
+            />
+          </SocialIconButton>
+        </Stack>
+      </Stack>
+    </div>
+  );
+};
+
+TopNav.propTypes = {
+  onNavOpen: PropTypes.func,
+};

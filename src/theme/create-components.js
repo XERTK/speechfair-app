@@ -59,8 +59,9 @@ export function createComponents(config) {
       styleOverrides: {
         root: {
           borderRadius: 20,
+          width: "100%",
           [`&.${paperClasses.elevation1}`]: {
-            boxShadow: "0px 5px 22px rgba(0, 0, 0, 0.04), 0px 0px 0px 0.5px rgba(0, 0, 0, 0.03)",
+            boxShadow: "0px 5px 22px rgba(0, 0, 0, 0.5)",
           },
         },
       },
@@ -68,9 +69,9 @@ export function createComponents(config) {
     MuiCardContent: {
       styleOverrides: {
         root: {
-          padding: "32px 24px",
+          padding: "24px 24px",
           "&:last-child": {
-            paddingBottom: "32px",
+            paddingBottom: "24px",
           },
         },
       },

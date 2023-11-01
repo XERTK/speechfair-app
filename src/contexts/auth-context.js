@@ -15,6 +15,7 @@ import { getDoc, doc, setDoc } from "firebase/firestore";
 const HANDLERS = {
   INITIALIZE: "INITIALIZE",
   SIGN_IN: "SIGN_IN",
+  SIGN_UP: "SIGN_UP",
   SIGN_OUT: "SIGN_OUT",
 };
 
@@ -50,6 +51,15 @@ const handlers = {
       user,
     };
   },
+  [HANDLERS.SIGN_UP]: (state, action) => {
+    const user = action.payload;
+
+    return {
+      ...state,
+      isAuthenticated: true,
+      user,
+    };
+  },
   [HANDLERS.SIGN_OUT]: (state) => {
     return {
       ...state,
@@ -70,6 +80,7 @@ export const AuthProvider = (props) => {
   const initialized = useRef(false);
 
   const initialize = async () => {
+    // Prevent from calling twice in development mode with React.StrictMode enabled
     if (initialized.current) {
       return;
     }
@@ -79,25 +90,16 @@ export const AuthProvider = (props) => {
     let isAuthenticated = false;
 
     try {
-      isAuthenticated = window.sessionStorage.getItem("authenticated") === "true";
+      isAuthenticated = window.localStorage.getItem("authenticated") === "true";
     } catch (err) {
       console.error(err);
     }
 
     if (isAuthenticated) {
-      // Here, you should set your user data
-      // For example:
-      // const user = {
-      //   id: "your-user-id",
-      //   avatar: "/assets/avatars/your-avatar.png",
-      //   name: "Your Name",
-      //   email: "your@email.com",
-      // };
-      // Dispatch the user data
-      // dispatch({
-      //   type: HANDLERS.INITIALIZE,
-      //   payload: user,
-      // });
+      dispatch({
+        type: HANDLERS.INITIALIZE,
+        payload: getCurrentUser(),
+      });
     } else {
       dispatch({
         type: HANDLERS.INITIALIZE,
@@ -105,45 +107,43 @@ export const AuthProvider = (props) => {
     }
   };
 
-  useEffect(() => {
-    initialize();
-  }, []);
+  useEffect(
+    () => {
+      initialize();
+    },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    []
+  );
 
   const skip = () => {
     try {
-      window.sessionStorage.setItem("authenticated", "true");
+      window.localStorage.setItem("authenticated", "true");
     } catch (err) {
       console.error(err);
     }
+    dispatch({
+      type: HANDLERS.SIGN_IN,
+      payload: getCurrentUser(),
+    });
+  };
 
-    // Similar to the initialization, here, you should set your user data
-    // and dispatch it
+  const getCurrentUser = () => {
+    // TODO: get logged in user from firebase
+    const user = {};
+    return user;
   };
 
   const signIn = async (email, password) => {
     try {
-      const userCredential = await signInWithEmailAndPassword(auth, email, password);
-      const user = userCredential.user;
-
-      const userDocRef = doc(db, "users", user.uid);
-      const userDoc = await getDoc(userDocRef);
-      console.log("signInWithEmailAndPassword");
-      console.log(userDoc);
-      if (userDoc.exists()) {
-        const userData = userDoc.data();
-        console.log("User data from Firestore:", userData);
-
-        dispatch({
-          type: HANDLERS.INITIALIZE,
-          payload: userData,
-        });
-      }
-
-      return user;
+      await signInWithEmailAndPassword(auth, email, password);
+      window.localStorage.setItem("authenticated", "true");
+      dispatch({
+        type: HANDLERS.SIGN_IN,
+        payload: getCurrentUser(),
+      });
     } catch (error) {
-      const errorMessage = error.message;
-      console.error("Error logging in:", errorMessage);
-      throw new Error(errorMessage);
+      console.error("Error logging in:", error.message);
+      throw new Error(error.message);
     }
   };
 
@@ -154,28 +154,25 @@ export const AuthProvider = (props) => {
   };
 
   // Implement signUp function, if needed
-  const signUp = async (email, firstName, lastName, password, phonenumber, isEmail, isWhatsapp) => {
+  const signUp = async (email, firstName, lastName, password, phoneNumber, isEmail, isWhatsApp) => {
     try {
-      const userCredential = await createUserWithEmailAndPassword(auth, email, password);
-      const user = userCredential.user;
-
+      const { user } = await createUserWithEmailAndPassword(auth, email, password);
+      window.localStorage.setItem("authenticated", "true");
       const userData = {
         uid: user.uid,
-        email: email,
+        email,
         role: "user",
-        firstName: firstName, // Use values from formik
-        lastName: lastName, // Use values from formik
-        password: password, // Use values from formik
-        phonenumber: phonenumber, // Use values from formik
-        isEmail: isEmail, // Use values from formik
-        isWhatsapp: isWhatsapp, // Use values from formik
+        firstName,
+        lastName,
+        phoneNumber,
+        isEmail,
+        isWhatsApp,
       };
-
       await setDoc(doc(db, "users", user.uid), userData);
-
-      console.log("User registered with ID:", user.uid);
-
-      return user;
+      dispatch({
+        type: HANDLERS.SIGN_UP,
+        payload: getCurrentUser(),
+      });
     } catch (error) {
       const authError = error;
       if (authError.code === "auth/email-already-in-use") {

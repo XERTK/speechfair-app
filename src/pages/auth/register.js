@@ -56,12 +56,8 @@ const Page = () => {
       password: Yup.string().max(255).required("Password is required"),
     }),
     onSubmit: async (values, helpers) => {
-      // Log the input from all fields
       console.log("Form Input Values:", formik.values);
-
       try {
-        console.log("asdfasdf");
-
         await auth.signUp(
           values.email,
           values.firstName,
@@ -71,7 +67,7 @@ const Page = () => {
           values.isEmail,
           values.isWhatsapp
         );
-        //   router.push("/");
+        router.push("/auth/login");
       } catch (err) {
         helpers.setStatus({ success: false });
         helpers.setErrors({ submit: err.message });

@@ -16,9 +16,7 @@ export const Layout = (props) => {
             width: "100%",
             height: "100vh",
           }}
-        >
-          {console.log(backgroundImage)}
-        </Box>
+        ></Box>
       </Grid>
       <Grid
         item
