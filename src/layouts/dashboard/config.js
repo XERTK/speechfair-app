@@ -41,15 +41,14 @@ export const items = [
     path: "/admin/users",
     icon: (
       <SvgIcon fontSize="small">
-      </SvgIcon>
         <UsersIcon />
+      </SvgIcon>
     ),
   },
   {
     title: "Companies",
     path: "/companies",
     icon: (
-
       <SvgIcon fontSize="small">
         <ShoppingBagIcon />
       </SvgIcon>
