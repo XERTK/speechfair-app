@@ -1,12 +1,20 @@
-import { configureStore } from "@reduxjs/toolkit";
+import { combineReducers, configureStore } from "@reduxjs/toolkit";
 import { apiSlice } from "./api";
 
-const store = configureStore({
-  reducer: {
-    [apiSlice.reducerPath]: apiSlice.reducer,
-  },
+const combinedReducer = combineReducers({
+  [apiSlice.reducerPath]: apiSlice.reducer,
+});
+
+const rootReducer = (state, action) => {
+  if (action.type === "RESET") {
+    state = undefined;
+  }
+
+  return combinedReducer(state, action);
+};
+
+export const store = configureStore({
+  reducer: rootReducer,
   middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat(apiSlice.middleware),
   devTools: true,
 });
-
-export default store;
