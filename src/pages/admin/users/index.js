@@ -11,6 +11,7 @@ import { Layout as DashboardLayout } from "src/layouts/dashboard/layout";
 import { CustomersSearch } from "src/sections/customer/customers-search";
 import { applyPagination } from "src/utils/apply-pagination";
 import DataTable from "src/components/data-table";
+import { useFetchUsersQuery } from "src/store/user";
 
 const UsersPage = () => {
   const [query, setQuery] = useState("");
@@ -25,6 +26,8 @@ const UsersPage = () => {
     { field: "col1", headerName: "Column 1", width: 150, cellModesModel: "is Awesome" },
     { field: "col2", headerName: "Column 2", width: 150 },
   ];
+
+  const { data } = useFetchUsersQuery();
 
   return (
     <>
