@@ -21,8 +21,10 @@
     "@heroicons/react": "2.0.16",
     "@mui/icons-material": "^5.14.14",
     "@mui/lab": "5.0.0-alpha.120",
-    "@mui/material": "5.11.10",
+    "@mui/material": "^5.14.16",
+    "@mui/styled-engine-sc": "^6.0.0-alpha.4",
     "@mui/system": "5.11.9",
+    "@mui/x-data-grid": "^6.17.0",
     "@mui/x-date-pickers": "5.0.19",
     "apexcharts": "3.37.0",
     "date-fns": "2.29.3",
@@ -41,6 +43,7 @@
     "react-phone-number-input": "^3.3.7",
     "react-scroll": "^1.9.0",
     "simplebar-react": "^3.2.1",
+    "styled-components": "^6.1.0",
     "yup": "1.0.0"
   },
   "devDependencies": {

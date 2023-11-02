@@ -229,6 +229,7 @@ export function createComponents(config) {
         },
         notchedOutline: {
           borderColor: palette.neutral[200],
+          // borderColor: "black",
           transition: muiTheme.transitions.create(["border-color", "box-shadow"]),
         },
       },
@@ -271,35 +272,36 @@ export function createComponents(config) {
         },
       },
     },
-    MuiTableCell: {
-      styleOverrides: {
-        root: {
-          borderBottomColor: palette.divider,
-          padding: "15px 16px",
-        },
-      },
-    },
-    MuiTableHead: {
-      styleOverrides: {
-        root: {
-          borderBottom: "none",
-          [`& .${tableCellClasses.root}`]: {
-            borderBottom: "none",
-            backgroundColor: palette.neutral[50],
-            color: palette.neutral[700],
-            fontSize: 12,
-            fontWeight: 600,
-            lineHeight: 1,
-            letterSpacing: 0.5,
-            textTransform: "uppercase",
-          },
-          [`& .${tableCellClasses.paddingCheckbox}`]: {
-            paddingTop: 4,
-            paddingBottom: 4,
-          },
-        },
-      },
-    },
+
+    // MuiTableCell: {
+    //   styleOverrides: {
+    //     root: {
+    //       borderBottomColor: palette.divider,
+    //       padding: "15px 16px",
+    //     },
+    //   },
+    // },
+    // MuiTableHead: {
+    //   styleOverrides: {
+    //     root: {
+    //       borderBottom: "none",
+    //       [`& .${tableCellClasses.root}`]: {
+    //         borderBottom: "none",
+    //         backgroundColor: palette.neutral[50],
+    //         color: palette.neutral[700],
+    //         fontSize: 12,
+    //         fontWeight: 600,
+    //         lineHeight: 1,
+    //         letterSpacing: 0.5,
+    //         textTransform: "uppercase",
+    //       },
+    //       [`& .${tableCellClasses.paddingCheckbox}`]: {
+    //         paddingTop: 4,
+    //         paddingBottom: 4,
+    //       },
+    //     },
+    //   },
+    // },
     MuiTextField: {
       defaultProps: {
         variant: "filled",
