@@ -16,19 +16,22 @@ import ArrowUpOnSquareIcon from "@heroicons/react/24/solid/ArrowUpOnSquareIcon";
 import FunnelIcon from "@heroicons/react/24/solid/FunnelIcon";
 import { buildURLQuery } from "src/utils/build-url-query";
 const DataTable = (props) => {
-  const { rows, rowCount, columns, setQuery } = props;
+  const { rows, rowCount, columns, query, setQuery } = props;
   const [paginationModel, setPaginationModel] = React.useState({
     pageSize: 10,
-    page: 0,
+    page: 1,
   });
+
   useEffect(() => {
-    setQuery(
-      buildURLQuery({ page: paginationModel.page, limit: paginationModel.pageSize, search: "" })
-    );
+    if (paginationModel.page > query.page) {
+    }
+    setQuery({ page: paginationModel.page, limit: paginationModel.pageSize });
   }, [paginationModel, setQuery]);
+
   if (!rows) {
     return <></>;
   }
+
   return (
     <Stack spacing={3} sx={{ mt: 2 }}>
       <Card sx={{ p: 2 }}>
