@@ -18,6 +18,7 @@ export const usersApi = apiSlice.injectEndpoints({
     getUsers: builder.query({
       async queryFn(params) {
         try {
+          console.log(params.limit);
           let q = query(collection(db, "users"), orderBy("uid"), limit(params.limit));
           if (params.lastVisible) {
             q = query(
@@ -28,11 +29,7 @@ export const usersApi = apiSlice.injectEndpoints({
             );
           }
           const querySnapshot = await getDocs(q);
-          let users = querySnapshot.docs.map((doc) => ({
-            id: doc.id,
-            ...doc.data(),
-          }));
-          return { data: users };
+          return { data: querySnapshot };
         } catch (error) {
           console.error("Failed to fetch users:", error);
           return { error: { status: "API_ERROR", message: error.message } };

@@ -1,6 +1,15 @@
 import React, { useEffect } from "react";
 import { DataGrid } from "@mui/x-data-grid";
-
+import {
+  collection,
+  query,
+  orderBy,
+  limit,
+  getDocs,
+  deleteDoc,
+  startAfter,
+  doc,
+} from "firebase/firestore";
 import {
   Button,
   Card,
@@ -16,21 +25,21 @@ import ArrowUpOnSquareIcon from "@heroicons/react/24/solid/ArrowUpOnSquareIcon";
 import FunnelIcon from "@heroicons/react/24/solid/FunnelIcon";
 import { buildURLQuery } from "src/utils/build-url-query";
 const DataTable = (props) => {
-  const { rows, rowCount, columns, query, setQuery } = props;
+  const { rows, rowCount, columns, query, setQuery, lastVisible } = props;
   const [paginationModel, setPaginationModel] = React.useState({
-    pageSize: 10,
-    page: 1,
+    pageSize: query.limit,
+    page: query.page,
   });
 
   useEffect(() => {
-    if (paginationModel.page > query.page) {
-    }
+    // if (paginationModel.page > query.page) {
+    // }
     setQuery({ page: paginationModel.page, limit: paginationModel.pageSize });
   }, [paginationModel, setQuery]);
-
   if (!rows) {
-    return <></>;
+    return <>NO data found</>;
   }
+  console.log(lastVisible);
 
   return (
     <Stack spacing={3} sx={{ mt: 2 }}>
