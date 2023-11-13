@@ -33,6 +33,8 @@ const UsersPage = () => {
   const { data } = useGetUsersQuery<any>(query);
   const [deleteUser] = useDeleteUserMutation();
 
+  console.log('data for the reult', data?.results);
+
   return (
     <Box
       component="main"

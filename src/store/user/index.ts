@@ -9,6 +9,7 @@ import {
   doc,
   getCountFromServer,
   where,
+  updateDoc,
 } from 'firebase/firestore';
 import { apiSlice } from '../api';
 import db from '@/configs/firestore';
@@ -21,14 +22,15 @@ export const usersApi = apiSlice.injectEndpoints({
         try {
           console.log('Fetching users with params:', params);
           const usersCollection = collection(db, USERS_PATH);
+          console.log('lastvvs', params.lastVisible);
           const pagination = params.lastVisible
             ? [startAfter(params.lastVisible)]
             : [];
 
           const userQuery = query(
             usersCollection,
-            orderBy('email'),
-            where('email', '>=', params.search || ''),
+            orderBy('uid'),
+            where('uid', '>=', params.search || ''),
             limit(params.limit),
             ...pagination
           );
@@ -76,27 +78,20 @@ export const usersApi = apiSlice.injectEndpoints({
     getUser: builder.query({
       async queryFn(id) {
         try {
-          return { data: '' };
+          const data = doc(db, USERS_PATH, id);
+          return { data };
         } catch (error: any) {
           return { error };
         }
       },
       providesTags: ['User'],
     }),
-    createUser: builder.mutation({
-      async queryFn(body) {
-        try {
-          return { data: '' };
-        } catch (error: any) {
-          return { error };
-        }
-      },
-      invalidatesTags: ['User'],
-    }),
     updateUser: builder.mutation({
-      async queryFn({ id, body }) {
+      async queryFn({ id, body }: any) {
         try {
-          return { data: '' };
+          const data = await updateDoc(doc(db, USERS_PATH, id), body);
+
+          return { data };
         } catch (error: any) {
           return { error };
         }
@@ -107,7 +102,7 @@ export const usersApi = apiSlice.injectEndpoints({
       async queryFn(id) {
         try {
           await deleteDoc(doc(db, USERS_PATH, id));
-          return { data: '' };
+          return { data: 'Document is Deleted successfully' };
         } catch (error: any) {
           return { error };
         }
@@ -120,7 +115,6 @@ export const usersApi = apiSlice.injectEndpoints({
 export const {
   useGetUsersQuery,
   useGetUserQuery,
-  useCreateUserMutation,
   useUpdateUserMutation,
   useDeleteUserMutation,
 } = usersApi;

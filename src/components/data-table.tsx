@@ -7,6 +7,7 @@ import {
   OutlinedInput,
   Stack,
   SvgIcon,
+  Tooltip,
 } from '@mui/material';
 import MagnifyingGlassIcon from '@heroicons/react/24/solid/MagnifyingGlassIcon';
 import ArrowDownOnSquareIcon from '@heroicons/react/24/solid/ArrowDownOnSquareIcon';
@@ -115,43 +116,47 @@ const DataTable = (props: any) => {
               return (
                 <>
                   {onEdit && (
-                    <span
-                      onClick={() => {
-                        onEdit(id);
-                      }}
-                    >
-                      <SvgIcon fontSize="small">
-                        <PencilIcon />
-                      </SvgIcon>
-                    </span>
+                    <Tooltip title={`edit`} arrow>
+                      <span
+                        onClick={() => {
+                          onEdit(id);
+                        }}
+                      >
+                        <SvgIcon fontSize="small">
+                          <PencilIcon />
+                        </SvgIcon>
+                      </span>
+                    </Tooltip>
                   )}
                   {onDelete && (
-                    <span
-                      style={{
-                        marginLeft: 'auto',
-                        marginRight: '20px',
-                      }}
-                      onClick={() => {
-                        Swal.fire({
-                          title: '<strong>Warning</strong>',
-                          icon: 'warning',
-                          html: 'Are you sure you want to delete this?',
-                          showCloseButton: true,
-                          showCancelButton: true,
-                          focusConfirm: false,
-                          confirmButtonText: 'Yes',
-                          cancelButtonText: 'No',
-                        }).then(async (result: any) => {
-                          if (result.isConfirmed) {
-                            onDelete(id);
-                          }
-                        });
-                      }}
-                    >
-                      <SvgIcon fontSize="small">
-                        <TrashIcon style={{ color: 'red' }} />
-                      </SvgIcon>
-                    </span>
+                    <Tooltip title={`Delete`} arrow>
+                      <span
+                        style={{
+                          marginLeft: 'auto',
+                          marginRight: '20px',
+                        }}
+                        onClick={() => {
+                          Swal.fire({
+                            title: '<strong>Warning</strong>',
+                            icon: 'warning',
+                            html: 'Are you sure you want to delete this?',
+                            showCloseButton: true,
+                            showCancelButton: true,
+                            focusConfirm: false,
+                            confirmButtonText: 'Yes',
+                            cancelButtonText: 'No',
+                          }).then(async (result: any) => {
+                            if (result.isConfirmed) {
+                              onDelete(id);
+                            }
+                          });
+                        }}
+                      >
+                        <SvgIcon fontSize="small">
+                          <TrashIcon style={{ color: 'red' }} />
+                        </SvgIcon>
+                      </span>
+                    </Tooltip>
                   )}
                 </>
               );

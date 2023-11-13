@@ -107,7 +107,8 @@ export const AuthProvider = (props: any) => {
     if (isAuthenticated) {
       dispatch({
         type: HANDLERS.INITIALIZE,
-        payload: getCurrentUser(),
+        // payload: getCurrentUser(),
+        payload: window.localStorage.getItem('user'),
       });
     } else {
       dispatch({
@@ -132,7 +133,8 @@ export const AuthProvider = (props: any) => {
     }
     dispatch({
       type: HANDLERS.SIGN_IN,
-      payload: getCurrentUser(),
+      // payload: getCurrentUser(),
+      payload: window.localStorage.getItem('user'),
     });
   };
 
