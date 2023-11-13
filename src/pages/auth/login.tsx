@@ -1,64 +1,143 @@
 import Head from 'next/head';
 import NextLink from 'next/link';
-import { Box, Button, Link, Stack, Typography } from '@mui/material';
-import { AuthLayout } from '@/layouts/auth/layout';
+import { useRouter } from 'next/navigation';
+import { useFormik } from 'formik';
+import { Formik, Form } from 'formik';
+import { Link as ScrollLink } from 'react-scroll';
 
-import { useForm } from 'react-hook-form';
-import { yupResolver } from '@hookform/resolvers/yup';
-import * as yup from 'yup';
+import * as Yup from 'yup';
+import {
+  Box,
+  Button,
+  Link,
+  Stack,
+  Typography,
+  Dialog, // Import Dialog component
+  DialogTitle, // Import DialogTitle component
+  DialogContent, // Import DialogContent component
+  DialogActions,
+} from '@mui/material';
 
-import { useRouter } from 'next/router';
-import { useSearchParams } from 'next/navigation';
-import { toast } from 'react-toastify';
+import logoImg from '../../../public/assets/main.png';
+import { useState } from 'react';
+// import 'react-phone-number-input/style.css'; // This imports the default CSS styles.
 import CustomField from '@/components/custom-field';
+
+import { AuthLayout } from '@/layouts/auth/layout';
 import { useAuth } from '@/hooks/use-auth';
+const newBackgroudImg = '/assets/auth-illustration2.jpg'; // Relative path
 
-interface FormData {
-  email: string;
-  password: string;
-}
-
-const schema = yup.object().shape({
-  email: yup.string().email().required(),
-  password: yup.string().min(8).max(32).required(),
-});
-
-const LoginPage = () => {
+const Page = () => {
   const router = useRouter();
-  const searchParams = useSearchParams();
-  const { login } = useAuth();
 
-  const redirect = searchParams?.get('redirect') || '/';
+  const [openTermsModal, setOpenTermsModal] = useState(false); // State to control the modal
 
-  const {
-    control,
-    handleSubmit,
-    formState: { errors },
-  } = useForm<FormData>({
-    defaultValues: {
-      email: 'gohar13@gmail.com',
-      password: 'asdf1122',
+  // const auth = useAuth();
+  const auth: any = useAuth();
+
+  const formik = useFormik({
+    initialValues: {
+      email: '',
+      password: '',
+      submit: '',
     },
-    resolver: yupResolver(schema),
-  });
+    validationSchema: Yup.object({
+      email: Yup.string()
+        .email('Must be a valid email')
+        .max(255)
+        .required('Email is required'),
+      password: Yup.string()
+        .max(255)
+        .required('Password is required'),
+    }),
+    onSubmit: async (values, helpers) => {
+      try {
+        console.log('sigIn attempt');
+        console.log(values.email);
 
-  const onSubmit = async (data: FormData) => {
-    try {
-      await login(data);
-      router.push(redirect);
-    } catch (err: any) {
-      toast.error(err?.data?.message || err.error);
-    }
-  };
+        await auth.signIn(values.email, values.password);
+        router.push('/');
+      } catch (err: any) {
+        helpers.setStatus({
+          success: false,
+          submit: 'An error occurred while signing in.',
+        });
+
+        helpers.setErrors({
+          email: 'An error occurred while signing in email.',
+        });
+        helpers.setSubmitting(false);
+        console.error(err.message);
+      }
+    },
+    validateOnBlur: true,
+    validateOnChange: true,
+  });
 
   return (
     <>
       <Head>
-        <title>Login | Fcorner Admin</title>
+        <title>Register | Devias Kit</title>
       </Head>
       <Box
         sx={{
-          backgroundColor: 'background.paper',
+          width: '100%',
+          px: 3,
+          mt: 3,
+        }}
+      >
+        <Box
+          sx={{
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+          }}
+        >
+          <Box>
+            <img src={logoImg.src} alt="Logo" width={'55.61px'} />
+          </Box>
+          <Box>
+            <Typography
+              variant="body2"
+              sx={{
+                display: 'flex',
+                alignItems: 'center',
+                color: '#000000',
+                fontSize: 16,
+              }}
+            >
+              Not a Member Yet?{' '}
+              <Link
+                component={NextLink}
+                href="/auth/register"
+                underline="none"
+                sx={{
+                  fontWeight: 'bold',
+                  color: '#000000',
+                  fontSize: 16,
+                  textDecoration: 'none',
+                  borderBottom: '0.1rem solid #ffd600',
+                  marginLeft: '0.5rem', // Add space between the two links
+                }}
+              >
+                Sign Up
+              </Link>
+            </Typography>
+          </Box>
+        </Box>
+        <Typography
+          variant="h6"
+          sx={{
+            mt: 1,
+            fontSize: 22,
+          }}
+        >
+          Log In
+        </Typography>
+      </Box>
+
+      <Box
+        sx={{
           flex: '1 1 auto',
           alignItems: 'center',
           display: 'flex',
@@ -67,61 +146,117 @@ const LoginPage = () => {
       >
         <Box
           sx={{
-            maxWidth: 550,
-            px: 3,
-            py: '100px',
             width: '100%',
+            px: 4,
           }}
         >
-          <div>
-            <Stack spacing={1} sx={{ mb: 3 }}>
-              <Typography variant="h4">Login</Typography>
-              <Typography color="text.secondary" variant="body2">
-                Don&apos;t have an account? &nbsp;
-                <Link
-                  component={NextLink}
-                  href="/auth/register"
-                  underline="hover"
-                  variant="subtitle2"
-                >
-                  Register
-                </Link>
-              </Typography>
-            </Stack>
-            <form onSubmit={handleSubmit(onSubmit)} noValidate>
+          <form noValidate onSubmit={formik.handleSubmit}>
+            <Stack spacing={1} sx={{ mt: 3 }}>
               <CustomField
-                variant="filled"
+                label="Email" // Add the 'label' prop here
+                error={formik.touched.email && formik.errors.email}
                 name="email"
-                label="Email"
-                control={control}
-                error={errors.email}
+                type="email"
+                placeholder="Your Email Address"
+                onChange={formik.handleChange}
+                value={formik.values.email}
               />
+
               <CustomField
-                variant="filled"
+                label="password" // Add the 'label' prop here
+                error={
+                  formik.touched.password && formik.errors.password
+                }
                 name="password"
-                label="Password"
                 type="password"
-                control={control}
-                error={errors.password}
+                placeholder="Your Password"
+                onChange={formik.handleChange}
+                value={formik.values.password}
               />
-              <Button
-                fullWidth
-                size="large"
+            </Stack>
+            {formik.errors.submit && (
+              <Typography
+                color="error"
                 sx={{ mt: 3 }}
-                type="submit"
-                variant="contained"
+                variant="body2"
               >
-                Continue
-              </Button>
-            </form>
-          </div>
+                {formik.errors.submit}
+              </Typography>
+            )}
+            <Button
+              fullWidth
+              size="large"
+              sx={{ mt: 3 }}
+              type="submit"
+              variant="contained"
+            >
+              Log In
+            </Button>
+          </form>
+          <Box sx={{ py: 1 }}>
+            <ScrollLink
+              to="termsOfServiceSection"
+              spy={true}
+              smooth={true}
+              duration={500}
+              offset={-50}
+              activeClass="active"
+            >
+              <Link
+                component={NextLink}
+                href=""
+                underline="none"
+                sx={{
+                  fontWeight: 'bold',
+                  color: '#000000',
+                  fontSize: 16,
+                  borderBottom: '0.1rem solid #ffd600',
+                  display: 'inline-block',
+                  marginLeft: '0.3rem', // Add space between links
+                }}
+              >
+                Forgot Password?
+              </Link>
+            </ScrollLink>
+          </Box>
         </Box>
       </Box>
+
+      <Box
+        sx={{
+          width: '100%',
+          position: 'absolute',
+          bottom: 0,
+        }}
+      >
+        <Typography
+          sx={{
+            ml: 10,
+            mb: 2,
+            color: '#000000',
+            fontSize: 14,
+            fontWeight: 'bold',
+          }}
+        >
+          The entirety of this website is protected by international
+          copyright © 2021–2022 AgoraGPS Ltd.
+        </Typography>
+      </Box>
+      <Dialog open={openTermsModal} fullWidth maxWidth="md">
+        <DialogTitle>Terms of Service</DialogTitle>
+        <DialogContent>
+          {/* Your Terms of Service content here */}
+        </DialogContent>
+        <DialogActions>
+          <Button color="primary">Close</Button>
+        </DialogActions>
+      </Dialog>
     </>
   );
 };
 
-LoginPage.getLayout = (page: any) => <AuthLayout>{page}</AuthLayout>;
-LoginPage.authGuard = false;
+Page.getLayout = (page: any) => (
+  <AuthLayout backgroundImage={newBackgroudImg}>{page}</AuthLayout>
+);
 
-export default LoginPage;
+export default Page;

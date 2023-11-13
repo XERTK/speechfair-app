@@ -1,52 +1,36 @@
+import { Box, TextField } from '@mui/material';
 import React from 'react';
-import {
-  TextField,
-  FormControl,
-  FormHelperText,
-  TextFieldProps,
-} from '@mui/material';
-import { Controller } from 'react-hook-form';
 
-type CustomFieldProps = {
-  control: any;
-  rules?: any;
-  error?: any;
-} & Partial<TextFieldProps>;
-
-function CustomField({
-  name,
-  control,
-  rules,
-  error,
-  inputProps,
-  ...rest
-}: CustomFieldProps) {
-  return (
-    <FormControl fullWidth sx={{ mb: 4 }}>
-      <Controller
-        name={name || ''}
-        control={control}
-        rules={rules}
-        render={({ field }) => (
-          <TextField
-            {...rest}
-            value={field.value}
-            onBlur={field.onBlur}
-            onChange={field.onChange}
-            error={Boolean(error)}
-            InputProps={{
-              inputProps: inputProps,
-            }}
-          />
-        )}
-      />
-      {error && (
-        <FormHelperText sx={{ color: 'error.main' }}>
-          {error.message}
-        </FormHelperText>
-      )}
-    </FormControl>
-  );
+interface CustomFieldProps {
+  error: any;
+  label: string;
+  [rest: string]: any; // Allow any other props
 }
+
+const CustomField: React.FC<CustomFieldProps> = ({
+  error,
+  label,
+  ...rest
+}) => {
+  return (
+    <>
+      <Box>
+        {label}
+        <TextField
+          size="small"
+          error={!!error}
+          helperText={error}
+          type="text"
+          fullWidth
+          {...rest}
+          style={{
+            marginBottom: '16px', // Use 'marginBottom' instead of 'mb'
+          }}
+          hiddenLabel
+        />
+      </Box>
+    </>
+  );
+};
 
 export default CustomField;

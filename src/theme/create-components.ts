@@ -23,11 +23,18 @@ export function createComponents(config: any) {
         },
       },
     },
+
     MuiButton: {
       styleOverrides: {
         root: {
           borderRadius: '12px',
           textTransform: 'none',
+          color: 'black',
+          backgroundColor: '#fbd603',
+          '&:hover': {
+            backgroundColor: '#9c8f1a',
+            boxShadow: 'none',
+          },
         },
         sizeSmall: {
           padding: '6px 16px',
@@ -53,9 +60,9 @@ export function createComponents(config: any) {
       styleOverrides: {
         root: {
           borderRadius: 20,
+          width: '100%',
           [`&.${paperClasses.elevation1}`]: {
-            boxShadow:
-              '0px 5px 22px rgba(0, 0, 0, 0.04), 0px 0px 0px 0.5px rgba(0, 0, 0, 0.03)',
+            boxShadow: '0px 5px 22px rgba(0, 0, 0, 0.5)',
           },
         },
       },
@@ -63,9 +70,9 @@ export function createComponents(config: any) {
     MuiCardContent: {
       styleOverrides: {
         root: {
-          padding: '32px 24px',
+          padding: '24px 24px',
           '&:last-child': {
-            paddingBottom: '32px',
+            paddingBottom: '24px',
           },
         },
       },
@@ -104,6 +111,7 @@ export function createComponents(config: any) {
           flexDirection: 'column',
           minHeight: '100%',
           width: '100%',
+          // height: "100%",
         },
         '#__next': {
           display: 'flex',
@@ -136,10 +144,14 @@ export function createComponents(config: any) {
       },
     },
     MuiInput: {
+      defaultProps: {
+        variant: 'filled',
+      },
       styleOverrides: {
         input: {
           fontSize: 14,
           fontWeight: 500,
+
           lineHeight: '24px',
           '&::placeholder': {
             color: palette.text.secondary,
@@ -151,7 +163,7 @@ export function createComponents(config: any) {
       styleOverrides: {
         root: {
           backgroundColor: 'transparent',
-          borderRadius: 8,
+          borderRadius: 5,
           borderStyle: 'solid',
           borderWidth: 1,
           overflow: 'hidden',
@@ -160,9 +172,9 @@ export function createComponents(config: any) {
             'border-color',
             'box-shadow',
           ]),
-          '&:hover': {
-            backgroundColor: palette.action.hover,
-          },
+          // "&:hover": {
+          //   backgroundColor: palette.action.hover,
+          // },
           '&:before': {
             display: 'none',
           },
@@ -174,8 +186,9 @@ export function createComponents(config: any) {
           },
           [`&.${filledInputClasses.focused}`]: {
             backgroundColor: 'transparent',
-            borderColor: palette.primary.main,
-            boxShadow: `${palette.primary.main} 0 0 0 2px`,
+            borderColor: 'yellow',
+            // borderColor: palette.primary.main,
+            // boxShadow: `${palette.primary.main} 0 0 0 2px`,
           },
           [`&.${filledInputClasses.error}`]: {
             borderColor: palette.error.main,
@@ -183,9 +196,10 @@ export function createComponents(config: any) {
           },
         },
         input: {
-          fontSize: 14,
+          fontSize: 18,
           fontWeight: 500,
           lineHeight: '24px',
+          color: 'lightgrey',
         },
       },
     },
@@ -193,7 +207,7 @@ export function createComponents(config: any) {
       styleOverrides: {
         root: {
           '&:hover': {
-            backgroundColor: palette.action.hover,
+            // backgroundColor: palette.action.hover,
             [`& .${outlinedInputClasses.notchedOutline}`]: {
               borderColor: palette.neutral[200],
             },
@@ -219,6 +233,7 @@ export function createComponents(config: any) {
         },
         notchedOutline: {
           borderColor: palette.neutral[200],
+          // borderColor: "black",
           transition: muiTheme.transitions.create([
             'border-color',
             'box-shadow',
@@ -264,35 +279,36 @@ export function createComponents(config: any) {
         },
       },
     },
-    MuiTableCell: {
-      styleOverrides: {
-        root: {
-          borderBottomColor: palette.divider,
-          padding: '15px 16px',
-        },
-      },
-    },
-    MuiTableHead: {
-      styleOverrides: {
-        root: {
-          borderBottom: 'none',
-          [`& .${tableCellClasses.root}`]: {
-            borderBottom: 'none',
-            backgroundColor: palette.neutral[50],
-            color: palette.neutral[700],
-            fontSize: 12,
-            fontWeight: 600,
-            lineHeight: 1,
-            letterSpacing: 0.5,
-            textTransform: 'uppercase',
-          },
-          [`& .${tableCellClasses.paddingCheckbox}`]: {
-            paddingTop: 4,
-            paddingBottom: 4,
-          },
-        },
-      },
-    },
+
+    // MuiTableCell: {
+    //   styleOverrides: {
+    //     root: {
+    //       borderBottomColor: palette.divider,
+    //       padding: "15px 16px",
+    //     },
+    //   },
+    // },
+    // MuiTableHead: {
+    //   styleOverrides: {
+    //     root: {
+    //       borderBottom: "none",
+    //       [`& .${tableCellClasses.root}`]: {
+    //         borderBottom: "none",
+    //         backgroundColor: palette.neutral[50],
+    //         color: palette.neutral[700],
+    //         fontSize: 12,
+    //         fontWeight: 600,
+    //         lineHeight: 1,
+    //         letterSpacing: 0.5,
+    //         textTransform: "uppercase",
+    //       },
+    //       [`& .${tableCellClasses.paddingCheckbox}`]: {
+    //         paddingTop: 4,
+    //         paddingBottom: 4,
+    //       },
+    //     },
+    //   },
+    // },
     MuiTextField: {
       defaultProps: {
         variant: 'filled',
