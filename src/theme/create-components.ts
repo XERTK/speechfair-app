@@ -159,6 +159,7 @@ export function createComponents(config: any) {
         },
       },
     },
+
     MuiFilledInput: {
       styleOverrides: {
         root: {

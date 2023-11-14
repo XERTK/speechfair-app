@@ -22,7 +22,7 @@ const AddStorePage = () => {
         }}
       >
         <Container maxWidth="xl">
-          <Typography variant="h4">Add Store</Typography>
+          <Typography variant="h4">Edit User</Typography>
           <AdminBreadcrumbs />
           <UserForm user={data} key={data?.id} />
         </Container>

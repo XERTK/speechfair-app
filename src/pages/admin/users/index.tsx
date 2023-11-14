@@ -16,6 +16,7 @@ import {
 } from '@/store/user';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
+import NextLink from 'next/link';
 
 const columns = [
   { field: 'id', flex: 1 },
@@ -47,7 +48,7 @@ const UsersPage = () => {
         <Stack spacing={3}>
           <Stack direction="row" spacing={1}>
             <Typography variant="h4">Users</Typography>
-            <Link href="/admin/users/add">
+            <NextLink href="/admin/users/add">
               <Button
                 startIcon={
                   <SvgIcon fontSize="small">
@@ -59,7 +60,7 @@ const UsersPage = () => {
               >
                 Add
               </Button>
-            </Link>
+            </NextLink>
           </Stack>
           {/* // TODO: Fetch tolat row count */}
           <DataTable

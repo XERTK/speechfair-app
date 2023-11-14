@@ -2,19 +2,20 @@ import { Breadcrumbs, Typography } from '@mui/material';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import React from 'react';
+import NextLink from 'next/link';
 
 const AdminBreadcrumbs = () => {
-  const pathName = usePathname().split('/');
-  const lastRoute = pathName.splice(-1, 1);
+  const pathName = usePathname()?.split('/');
+  const lastRoute = pathName?.splice(-1, 1);
 
   return (
     <div>
       <Breadcrumbs aria-label="breadcrumb">
-        {pathName.length > 0 &&
-          pathName.map(
+        {pathName?.length > 0 &&
+          pathName?.map(
             (item: any, index: any) =>
               item !== '' && (
-                <Link
+                <NextLink
                   key={index}
                   href={pathName.join('/')}
                   color="inherit"
@@ -23,11 +24,11 @@ const AdminBreadcrumbs = () => {
                   }}
                 >
                   {item}
-                </Link>
+                </NextLink>
               )
           )}
         <Typography color="textPrimary">
-          {lastRoute.toString()}
+          {lastRoute?.toString()}
         </Typography>
       </Breadcrumbs>
     </div>

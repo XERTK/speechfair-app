@@ -10,6 +10,7 @@ import {
   getCountFromServer,
   where,
   updateDoc,
+  getDoc,
 } from 'firebase/firestore';
 import { apiSlice } from '../api';
 import db from '@/configs/firestore';
@@ -20,9 +21,7 @@ export const usersApi = apiSlice.injectEndpoints({
     getUsers: builder.query({
       async queryFn(params) {
         try {
-          console.log('Fetching users with params:', params);
           const usersCollection = collection(db, USERS_PATH);
-          console.log('lastvvs', params.lastVisible);
           const pagination = params.lastVisible
             ? [startAfter(params.lastVisible)]
             : [];
@@ -51,11 +50,7 @@ export const usersApi = apiSlice.injectEndpoints({
 
           const lastVisible =
             results.length > 0 ? results[results.length - 1].id : '';
-          console.log('Fetched users successfully:', {
-            results,
-            totalResults,
-            lastVisible,
-          });
+
           return {
             data: {
               results,
@@ -76,9 +71,10 @@ export const usersApi = apiSlice.injectEndpoints({
       providesTags: ['User'],
     }),
     getUser: builder.query({
-      async queryFn(id) {
+      async queryFn(id: any) {
         try {
-          const data = doc(db, USERS_PATH, id);
+          const snapShot = await getDoc(doc(db, USERS_PATH, id));
+          const data = snapShot.data();
           return { data };
         } catch (error: any) {
           return { error };
@@ -90,7 +86,6 @@ export const usersApi = apiSlice.injectEndpoints({
       async queryFn({ id, body }: any) {
         try {
           const data = await updateDoc(doc(db, USERS_PATH, id), body);
-
           return { data };
         } catch (error: any) {
           return { error };

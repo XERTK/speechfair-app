@@ -1,14 +1,11 @@
 import React from 'react';
-import { useForm } from 'react-hook-form';
+import { useForm, SubmitHandler } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 import CustomField from '@/components/custom-field';
 import { Button, Grid } from '@mui/material';
 import { toast } from 'react-toastify';
-import {
-  useCreateUserMutation,
-  useUpdateUserMutation,
-} from '@/store/user';
+import { useUpdateUserMutation } from '@/store/user';
 import Loader from '@/components/loader';
 import { useRouter } from 'next/router';
 
@@ -24,34 +21,32 @@ const schema = yup.object().shape({
   password: yup.string().min(8).max(32),
 });
 
-const UserForm = ({ user }: any) => {
+const UserForm: React.FC<{ user: any }> = ({ user }) => {
   const router = useRouter();
-  const [createUser, { isLoading: createLoading }] =
-    useCreateUserMutation();
-  const [updateUser, { isLoading: updateLoading }] =
-    useUpdateUserMutation();
-
+  console.log('user', user);
   const {
     control,
     handleSubmit,
     formState: { errors },
   } = useForm<FormData>({
     defaultValues: {
-      name: user?.name || '',
-      email: user?.email || '',
+      name: user?.name,
+      email: user?.email,
     },
     resolver: yupResolver(schema),
   });
 
-  const onSubmit = async (data: FormData) => {
+  const [updateUser, { isLoading: updateLoading }] =
+    useUpdateUserMutation();
+
+  const onSubmit: SubmitHandler<FormData> = async (data) => {
     try {
+      console.log(data.name);
       if (user) {
         await updateUser({
           id: user.id,
           body: data,
-        }).unwrap();
-      } else {
-        await createUser(data).unwrap();
+        });
       }
       toast.success('User updated');
       router.replace('/users');
@@ -69,7 +64,7 @@ const UserForm = ({ user }: any) => {
             name="name"
             label="Name"
             control={control}
-            error={errors.name}
+            error={errors.name} // Use errors.name?.message to display validation error
           />
         </Grid>
         <Grid item xs={12} md={4}>
@@ -78,7 +73,7 @@ const UserForm = ({ user }: any) => {
             name="email"
             label="Email"
             control={control}
-            error={errors.email}
+            error={errors.email} // Use errors.email?.message to display validation error
           />
         </Grid>
         <Grid item xs={12} md={4}>
@@ -88,7 +83,7 @@ const UserForm = ({ user }: any) => {
             label="Password"
             type="password"
             control={control}
-            error={errors.password}
+            error={errors.password} // Use errors.password?.message to display validation error
           />
         </Grid>
       </Grid>
@@ -97,15 +92,9 @@ const UserForm = ({ user }: any) => {
         sx={{ mt: 3, float: 'right' }}
         type="submit"
         variant="contained"
-        disabled={createLoading || updateLoading}
+        disabled={updateLoading}
       >
-        {createLoading || updateLoading ? (
-          <Loader />
-        ) : user ? (
-          'Update'
-        ) : (
-          'Add'
-        )}
+        {updateLoading ? <Loader /> : 'Update'}
       </Button>
     </form>
   );
