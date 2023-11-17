@@ -6,6 +6,8 @@ import { CssBaseline } from '@mui/material';
 import { ThemeProvider } from '@mui/material/styles';
 import 'simplebar-react/dist/simplebar.min.css';
 
+import '../components/lexicalEditor/editor.css';
+
 // ** Store Imports
 import { Provider } from 'react-redux';
 import { createEmotionCache } from '@/utils/create-emotion-cache';

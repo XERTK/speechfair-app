@@ -14,6 +14,7 @@ import {
   CONTENT_CATEGORY,
   CONTENT_REGIONS,
 } from '@/configs/constants';
+import Editor from '@/components/lexicalEditor';
 
 interface FormData {
   headline: string;
@@ -117,7 +118,7 @@ const PostForm: React.FC<{ user: any }> = ({ user }) => {
             />
           </Grid>
         </Grid>
-
+        <Editor />
         <Grid item xs={12} md={4}></Grid>
       </Grid>
       <Button
