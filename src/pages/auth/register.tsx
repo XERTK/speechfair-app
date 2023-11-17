@@ -5,11 +5,11 @@ import * as Yup from 'yup';
 import {
   Box,
   Button,
-  Checkbox,
   Link,
   Stack,
   FormControlLabel,
   Typography,
+  Checkbox,
 } from '@mui/material';
 import { useAuth } from '@/hooks/use-auth';
 import CustomField from '@/components/custom-field';
@@ -20,11 +20,8 @@ import logoImg from '../../../public/assets/main.png';
 import { Controller, useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { toast } from 'react-toastify';
-// import MaterialUiPhoneNumber from 'material-ui-phone-number';
 import PhoneInput from 'react-phone-input-2';
 import 'react-phone-input-2/lib/style.css';
-import { color, fontWeight, palette } from '@mui/system';
-import { yellow } from '@mui/material/colors';
 
 const phoneInputStyle = {
   input: {
@@ -44,12 +41,26 @@ const schema = Yup.object().shape({
   lastName: Yup.string().max(255).required('Name is required'),
   password: Yup.string().max(255).required('Password is required'),
   dateOfBirth: Yup.string().required('Date is required'),
-  phonenumber: Yup.string(),
-  // isEmail: Yup.boolean(),
-
-  // isEmail: Yup.boolean(), // Add isEmail here
-  // isWhatsapp: Yup.boolean(),
+  phoneNumber: Yup.string().required(),
+  passwordConfirmation: Yup.string().oneOf(
+    [Yup.ref('password')],
+    'Passwords must match'
+  ),
+  isEmail: Yup.boolean(),
+  isWhatsApp: Yup.boolean(),
 });
+
+interface FormData {
+  email: string;
+  password: string;
+  passwordConfirmation?: string;
+  firstName: string;
+  lastName: string;
+  phoneNumber: string;
+  dateOfBirth: string;
+  isEmail?: boolean;
+  isWhatsApp?: boolean;
+}
 
 const Page = () => {
   const router = useRouter();
@@ -61,37 +72,30 @@ const Page = () => {
     control,
     handleSubmit,
     formState: { errors },
-  } = useForm({
+  } = useForm<FormData>({
+    resolver: yupResolver(schema),
     defaultValues: {
       email: '',
+      password: '',
+      passwordConfirmation: '',
       firstName: '',
       lastName: '',
-      password: '',
-      phonenumber: '',
+      phoneNumber: '',
       dateOfBirth: '',
-      // isEmail: false,
-      // isEmail: false,
+      isEmail: false, // Add initial value for isEmail
+      isWhatsApp: false, // Add initial value for isWhatsApp
     },
-    resolver: yupResolver(schema),
   });
-
-  const onSubmitHandler = async (data: {
-    email: string;
-    firstName: string;
-    lastName: string;
-    password: string;
-    dateOfBirth: string;
-    phonenumber: string;
-    // isEmail: boolean;
-    // isWhatsapp: boolean;
-  }) => {
+  const onSubmitHandler = async (data: FormData) => {
     try {
       console.log(data);
-      // await auth.signUp(data);
-      // router.push(redirect);
+      await auth.register(data);
+      router.push(redirect);
     } catch (err: any) {
-      console.log('error', err);
-      toast.error(err?.data?.message || err.error);
+      console.log('error 44444', err?.message);
+      const errorMessage =
+        err?.message?.split('Firebase: ')[1] || 'An error occurred';
+      toast.error(errorMessage || 'An error occurred');
     }
   };
 
@@ -190,6 +194,7 @@ const Page = () => {
                 variant="filled"
                 control={control}
                 error={errors.firstName}
+                sx={{ mb: -3 }}
               />
               <CustomField
                 label="Your Last Name"
@@ -207,14 +212,15 @@ const Page = () => {
                 control={control}
                 error={errors.email}
               />
-
+              Phone#
               <Controller
-                name="phonenumber"
+                name="phoneNumber"
                 control={control}
                 render={({ field }) => (
                   <PhoneInput
                     {...field}
                     country="pk"
+                    value={field.value || ''}
                     inputStyle={{
                       fontSize: 16,
                       fontWeight: 500,
@@ -246,8 +252,15 @@ const Page = () => {
                 control={control}
                 error={errors.password}
               />
-
-              {/* add check box*/}
+              <CustomField
+                label="Confirm Password "
+                name="passwordConfirmation"
+                type="password"
+                placeholder="At least 8 characters"
+                variant="filled"
+                control={control}
+                error={errors.passwordConfirmation}
+              />
               <Typography
                 sx={{
                   mt: 1,
@@ -258,7 +271,34 @@ const Page = () => {
               >
                 Set up your account for your custom-made experience.
               </Typography>
-              <Box></Box>
+              <Box>
+                <Controller
+                  control={control}
+                  name="isEmail"
+                  render={({
+                    field: { onChange, value, name, ref },
+                  }) => (
+                    <Checkbox
+                      onChange={onChange} // send value to hook form
+                      inputRef={ref}
+                    />
+                  )}
+                />
+                Email
+                <Controller
+                  control={control}
+                  name="isWhatsApp"
+                  render={({
+                    field: { onChange, value, name, ref },
+                  }) => (
+                    <Checkbox
+                      onChange={onChange} // send value to hook form
+                      inputRef={ref}
+                    />
+                  )}
+                />
+                WhatsApp
+              </Box>{' '}
             </Stack>
             <Button
               fullWidth
@@ -318,27 +358,6 @@ const Page = () => {
             </Typography>
           </Box>
         </Box>
-      </Box>
-
-      <Box
-        sx={{
-          width: '100%',
-          position: 'absolute',
-          bottom: 0,
-        }}
-      >
-        <Typography
-          sx={{
-            ml: 10,
-            mb: 2,
-            color: '#000000',
-            fontSize: 14,
-            fontWeight: 'bold',
-          }}
-        >
-          The entirety of this website is protected by international
-          copyright © 2021–2022 AgoraGPS Ltd.
-        </Typography>
       </Box>
     </>
   );

@@ -197,7 +197,7 @@ export function createComponents(config: any) {
           },
         },
         input: {
-          fontSize: 18,
+          fontSize: 16,
           fontWeight: 500,
           lineHeight: '24px',
           color: 'lightgrey',
@@ -230,7 +230,7 @@ export function createComponents(config: any) {
         input: {
           fontSize: 14,
           fontWeight: 500,
-          lineHeight: '24px',
+          lineHeight: '20px',
         },
         notchedOutline: {
           borderColor: palette.neutral[200],

@@ -1,9 +1,9 @@
 import { Box, Container, Typography } from '@mui/material';
 import { DashboardLayout } from '@/layouts/dashboard/layout';
 import AdminBreadcrumbs from '@/components/breadcrums';
-import UserForm from '@/views/users/UserForm';
 import { useParams } from 'next/navigation';
 import { useGetUserQuery } from '@/store/user';
+import PostForm from '@/views/posts/PostForm';
 
 const AddStorePage = () => {
   const params = useParams<any>();
@@ -22,9 +22,9 @@ const AddStorePage = () => {
         }}
       >
         <Container maxWidth="xl">
-          <Typography variant="h4">Edit User</Typography>
+          <Typography variant="h4">Edit Post</Typography>
           <AdminBreadcrumbs />
-          <UserForm user={data} key={data?.id} />
+          <PostForm user={data} key={data?.id} />
         </Container>
       </Box>
     </>

@@ -5,12 +5,12 @@ import {
   Container,
   Unstable_Grid2 as Grid,
 } from '@mui/material';
-import { OverviewBudget } from '@/sections/overview/overview-budget';
-import { OverviewTotalCustomers } from '@/sections/overview/overview-total-customers';
-import { OverviewTasksProgress } from '@/sections/overview/overview-tasks-progress';
-import { OverviewTotalProfit } from '@/sections/overview/overview-total-profit';
-import { OverviewSales } from '@/sections/overview/overview-sales';
-import { OverviewLatestProducts } from '@/sections/overview/overview-latest-products';
+import { OverviewBudget } from '@/views/overview/overview-budget';
+import { OverviewTotalCustomers } from '@/views/overview/overview-total-customers';
+import { OverviewTasksProgress } from '@/views/overview/overview-tasks-progress';
+import { OverviewTotalProfit } from '@/views/overview/overview-total-profit';
+import { OverviewSales } from '@/views/overview/overview-sales';
+import { OverviewLatestProducts } from '@/views/overview/overview-latest-products';
 import { DashboardLayout } from '@/layouts/dashboard/layout';
 
 const now = new Date();

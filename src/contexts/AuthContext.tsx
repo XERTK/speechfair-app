@@ -1,12 +1,13 @@
 import { auth } from '@/configs/firebase';
 import db from '@/configs/firestore';
 import { signInWithEmailAndPassword } from '@firebase/auth';
+import { be } from 'date-fns/locale';
 import {
   createUserWithEmailAndPassword,
   AuthError,
 } from 'firebase/auth';
 import { doc, setDoc } from 'firebase/firestore';
-import { useRouter } from 'next/router';
+import router, { useRouter } from 'next/router';
 import { createContext, useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 
@@ -31,43 +32,30 @@ const AuthProvider = ({ children }: any) => {
     }
   }, []);
 
-  const handleRegister = async (
-    email: string,
-    firstName: string,
-    lastName: string,
-    password: string,
-    phoneNumber: string,
-    isEmail: boolean,
-    isWhatsApp: boolean
-  ) => {
+  const handleRegister = async (params: any) => {
     try {
       const { user } = await createUserWithEmailAndPassword(
         auth,
-        email,
-        password
+        params.email,
+        params.password
       );
       window.localStorage.setItem('authenticated', 'true');
       const userData = {
         uid: user.uid,
-        email,
+        email: params.email,
         role: 'user',
-        firstName,
-        lastName,
-        phoneNumber,
-        isEmail,
-        isWhatsApp,
+        firstName: params.firstName,
+        lastName: params.lastName,
+        phoneNumber: params.phoneNumber,
+        isEmail: params.isEmail,
+        isWhatsApp: params.isWhatsApp,
       };
       await setDoc(doc(db, 'users', user.uid), userData);
       setUser(user);
-    } catch (error) {
-      const authError = error as AuthError;
-      if (authError.code === 'auth/email-already-in-use') {
-        console.error('Error signing up: Email is already in use');
-        throw new Error('Email is already in use');
-      } else {
-        console.error('Error signing up:', authError);
-        throw authError;
-      }
+    } catch (error: any) {
+      const authError = error;
+      console.error('Error signing up:', authError);
+      throw authError;
     }
   };
 
@@ -86,6 +74,7 @@ const AuthProvider = ({ children }: any) => {
   };
 
   const handleLogout = () => {
+    setUser(null);
     localStorage.removeItem('tokens');
     localStorage.removeItem('user');
     router.push('/auth/login');

@@ -42,9 +42,11 @@ function CustomField({
               }}
               fullWidth
               {...rest}
-              style={{
-                marginBottom: '16px', // Use 'marginBottom' instead of 'mb'
-              }}
+              style={
+                {
+                  // marginBottom: '16px', // Use 'marginBottom' instead of 'mb'
+                }
+              }
               hiddenLabel
             />
           </Box>
