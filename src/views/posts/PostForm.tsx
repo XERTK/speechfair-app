@@ -24,12 +24,14 @@ interface FormData {
   region?: [string];
   category?: [string];
   password?: string;
+  postBody?: string;
 }
 
 const schema = yup.object().shape({
   headline: yup.string().required(),
   email: yup.string().email().required(),
   password: yup.string().min(8).max(32),
+  // postBody: yup.string(),
 });
 
 const PostForm: React.FC<{ user: any }> = ({ user }) => {
@@ -52,13 +54,13 @@ const PostForm: React.FC<{ user: any }> = ({ user }) => {
 
   const onSubmit: SubmitHandler<FormData> = async (data) => {
     // try {
-    //   console.log(data.name);
-    //   if (user) {
-    //     await updateUser({
-    //       id: user.id,
-    //       body: data,
-    //     });
-    //   }
+    console.log(data);
+    // if (user) {
+    //   await updateUser({
+    //     id: user.id,
+    //     body: data,
+    //   });
+    // }
     //   toast.success('User updated');
     //   router.replace('/users');
     // } catch (error: any) {
@@ -118,7 +120,14 @@ const PostForm: React.FC<{ user: any }> = ({ user }) => {
             />
           </Grid>
         </Grid>
-        <Editor />
+        <Grid item xs={12} md={4}>
+          <Editor
+            name="postBody"
+            control={control}
+            error={errors.headline}
+          />
+        </Grid>
+
         <Grid item xs={12} md={4}></Grid>
       </Grid>
       <Button
