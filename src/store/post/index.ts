@@ -90,18 +90,7 @@ export const postsApi = apiSlice.injectEndpoints({
       },
       providesTags: ['Post'],
     }),
-    updatePost: builder.mutation({
-      async queryFn({ id, body }: any) {
-        try {
-          const data = await updateDoc(doc(db, POSTS_PATH, id), body);
-          console.log(data);
-          return { data: body };
-        } catch (error: any) {
-          return { error };
-        }
-      },
-      invalidatesTags: ['Post'],
-    }),
+
     createPost: builder.mutation({
       async queryFn({ body }: any) {
         try {
@@ -114,8 +103,18 @@ export const postsApi = apiSlice.injectEndpoints({
             timestamp: serverTimestamp(),
           };
           await setDoc(docRef, data);
-
-          return { data };
+          return { data: { message: 'post added successfully' } };
+        } catch (error: any) {
+          return { error };
+        }
+      },
+      invalidatesTags: ['Post'],
+    }),
+    updatePost: builder.mutation({
+      async queryFn({ id, body }: any) {
+        try {
+          await updateDoc(doc(db, POSTS_PATH, id), body);
+          return { data: { message: 'post updated successfully' } };
         } catch (error: any) {
           return { error };
         }

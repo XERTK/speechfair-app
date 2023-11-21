@@ -50,7 +50,8 @@ const PostForm: React.FC<{ post: any }> = ({ post }) => {
     defaultValues: {
       headline: post?.headline || '',
       tags: post?.tags || '',
-      brandTo: post?.brand || '',
+      brandTo: post?.brandTo || '',
+      category: post?.category || '',
       region: post?.region || '',
     },
     resolver: yupResolver(schema),
@@ -66,7 +67,7 @@ const PostForm: React.FC<{ post: any }> = ({ post }) => {
     try {
       if (post) {
         await updatePost({
-          id: post.uid,
+          id: post.id,
           body: data,
         });
       } else {

@@ -1,5 +1,6 @@
 import { auth } from '@/configs/firebase';
 import db from '@/configs/firestore';
+import { useGetMeQuery } from '@/store/auth';
 import { signInWithEmailAndPassword } from '@firebase/auth';
 import { be } from 'date-fns/locale';
 import {
@@ -22,26 +23,25 @@ const AuthContext = createContext(defaultProvider);
 const AuthProvider = ({ children }: any) => {
   const router = useRouter();
 
-  const [user, setUser] = useState<any>(); // Provide the type explicitly.
-
-  useEffect(() => {
-    if (localStorage.getItem('user')) {
-      setUser(JSON.parse(localStorage.getItem('user') ?? ''));
-    } else {
-      setUser(null);
+  const { data: user } = useGetMeQuery(
+    {},
+    {
+      skip:
+        typeof window !== 'undefined' &&
+        !localStorage.getItem('user'),
     }
-  }, []);
+  );
 
   const handleRegister = async (params: any) => {
     try {
-      const { user } = await createUserWithEmailAndPassword(
+      const { user: authUser } = await createUserWithEmailAndPassword(
         auth,
         params.email,
         params.password
       );
       window.localStorage.setItem('authenticated', 'true');
       const userData = {
-        id: user.uid,
+        id: authUser.uid,
         email: params.email,
         role: 'user',
         firstName: params.firstName,
@@ -50,8 +50,8 @@ const AuthProvider = ({ children }: any) => {
         isEmail: params.isEmail,
         isWhatsApp: params.isWhatsApp,
       };
-      await setDoc(doc(db, 'users', user.uid), userData);
-      setUser(user);
+      await setDoc(doc(db, 'users', authUser.uid), userData);
+      localStorage.setItem('user', JSON.stringify(authUser));
     } catch (error: any) {
       const authError = error;
       console.error('Error signing up:', authError);
@@ -61,20 +61,19 @@ const AuthProvider = ({ children }: any) => {
 
   const handleLogin = async (params: any) => {
     try {
-      const res: any = await signInWithEmailAndPassword(
-        auth,
-        params.email,
-        params.password
-      );
-      setUser(res.user);
-      localStorage.setItem('user', JSON.stringify(res.user));
+      const { user: authUser }: any =
+        await signInWithEmailAndPassword(
+          auth,
+          params.email,
+          params.password
+        );
+      localStorage.setItem('user', JSON.stringify(authUser));
     } catch (err: any) {
       toast.error(err);
     }
   };
 
   const handleLogout = () => {
-    setUser(null);
     localStorage.removeItem('tokens');
     localStorage.removeItem('user');
     router.push('/auth/login');

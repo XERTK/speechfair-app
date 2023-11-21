@@ -1,13 +1,22 @@
-import { AUTH_URL } from '@/configs/constants';
+import { AUTH_URL, USERS_PATH } from '@/configs/constants';
 import { apiSlice } from '../api';
+import { doc, getDoc } from 'firebase/firestore';
+import db from '@/configs/firestore';
 
-export const userSlice = apiSlice.injectEndpoints({
+export const authSlice = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
     getMe: builder.query({
-      query: () => ({
-        url: `${AUTH_URL}/me`,
-      }),
-      keepUnusedDataFor: 5,
+      async queryFn() {
+        try {
+          const user = JSON.parse(localStorage.getItem('user') || '');
+          const snapShot = await getDoc(doc(db, USERS_PATH, user.id));
+          const data = snapShot.data();
+          return { data };
+        } catch (error: any) {
+          return { error };
+        }
+      },
+      providesTags: ['User'],
     }),
     login: builder.mutation({
       query(body) {
@@ -21,4 +30,4 @@ export const userSlice = apiSlice.injectEndpoints({
   }),
 });
 
-export const { useGetMeQuery, useLoginMutation } = userSlice;
+export const { useGetMeQuery, useLoginMutation } = authSlice;
