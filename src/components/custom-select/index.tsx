@@ -27,7 +27,7 @@ function CustomSelectField({
   ...rest
 }: CustomSelectFieldProps) {
   return (
-    <Grid xs={12} md={3} container direction="column">
+    <Grid container direction="column">
       <FormControl sx={{ mb: 4 }}>
         <InputLabel variant="filled" id="demo-simple-select-label">
           {label}
@@ -42,9 +42,7 @@ function CustomSelectField({
               label={label}
               {...field}
               {...rest}
-              defaultValue={
-                options.length > 0 ? options[0].value : ''
-              }
+              value={field.value || ''}
             >
               {options?.map((option) => (
                 <MenuItem key={option.value} value={option.value}>

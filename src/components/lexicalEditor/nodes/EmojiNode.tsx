@@ -5,6 +5,12 @@ export class EmojiNode extends TextNode {
     return 'emoji';
   }
 
+  static importJSON(jsonData: any) {
+    // Reconstruct EmojiNode instance from JSON data
+    const { className, text, key } = jsonData;
+    return new EmojiNode(className, text, key);
+  }
+
   static clone(node: any) {
     return new EmojiNode(node.__className, node.__text, node.__key);
   }

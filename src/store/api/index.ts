@@ -8,6 +8,6 @@ const fakeBaseQuery: BaseQueryFn = async (arg, api, options) => {
 
 export const apiSlice = createApi({
   baseQuery: fakeBaseQuery,
-  tagTypes: ['User'],
+  tagTypes: ['User', 'Post'],
   endpoints: (builder) => ({}),
 });

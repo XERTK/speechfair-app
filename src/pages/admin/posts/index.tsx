@@ -10,18 +10,21 @@ import {
 } from '@mui/material';
 import DataTable from '@/components/data-table';
 import { DashboardLayout } from '@/layouts/dashboard/layout';
-import {
-  useDeleteUserMutation,
-  useGetUsersQuery,
-} from '@/store/user';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import NextLink from 'next/link';
+import {
+  useDeletePostMutation,
+  useGetPostsQuery,
+} from '@/store/post';
 
 const columns = [
-  { field: 'id', flex: 1 },
-  { field: 'name', flex: 1 },
-  { field: 'email', flex: 1 },
+  { field: 'admin', flex: 1 },
+  { field: 'Headline', flex: 1 },
+  { field: 'Region', flex: 1 },
+  { field: 'Brand', flex: 1 },
+  { field: 'status', flex: 1 },
+  { field: 'Metrics', flex: 1 },
 ];
 
 const PostsPage = () => {
@@ -31,10 +34,10 @@ const PostsPage = () => {
     limit: 5,
   });
 
-  const { data } = useGetUsersQuery<any>(query);
-  const [deleteUser] = useDeleteUserMutation();
+  const { data } = useGetPostsQuery<any>(query);
+  const [deletePost] = useDeletePostMutation();
 
-  console.log('data for the reult', data?.results);
+  console.log('data for the reult', data);
 
   return (
     <Box
@@ -74,7 +77,7 @@ const PostsPage = () => {
               router.replace(`/admin/posts/${id}`);
             }}
             onDelete={(id: any) => {
-              deleteUser(id);
+              deletePost(id);
             }}
           />
         </Stack>

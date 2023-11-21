@@ -62,7 +62,7 @@ const UsersPage = () => {
               </Button>
             </NextLink>
           </Stack>
-          {/* // TODO: Fetch tolat row count */}
+          {/* TODO: Fetch tolat row count */}
           <DataTable
             rows={data?.results}
             rowCount={data?.totalResults}

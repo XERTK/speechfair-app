@@ -26,7 +26,7 @@ const AuthProvider = ({ children }: any) => {
 
   useEffect(() => {
     if (localStorage.getItem('user')) {
-      setUser(localStorage.getItem('user'));
+      setUser(JSON.parse(localStorage.getItem('user') ?? ''));
     } else {
       setUser(null);
     }
@@ -41,7 +41,7 @@ const AuthProvider = ({ children }: any) => {
       );
       window.localStorage.setItem('authenticated', 'true');
       const userData = {
-        uid: user.uid,
+        id: user.uid,
         email: params.email,
         role: 'user',
         firstName: params.firstName,

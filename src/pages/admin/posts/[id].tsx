@@ -2,13 +2,13 @@ import { Box, Container, Typography } from '@mui/material';
 import { DashboardLayout } from '@/layouts/dashboard/layout';
 import AdminBreadcrumbs from '@/components/breadcrums';
 import { useParams } from 'next/navigation';
-import { useGetUserQuery } from '@/store/user';
 import PostForm from '@/views/posts/PostForm';
+import { useGetPostQuery } from '@/store/post';
 
-const AddStorePage = () => {
+const AddPostPage = () => {
   const params = useParams<any>();
 
-  const { data } = useGetUserQuery<any>(params?.id, {
+  const { data } = useGetPostQuery<any>(params?.id, {
     skip: !params || params?.id === 'add',
   });
 
@@ -24,15 +24,15 @@ const AddStorePage = () => {
         <Container maxWidth="xl">
           <Typography variant="h4">Edit Post</Typography>
           <AdminBreadcrumbs />
-          <PostForm user={data} key={data?.id} />
+          <PostForm post={data} key={data?.id} />
         </Container>
       </Box>
     </>
   );
 };
 
-AddStorePage.getLayout = (page: any) => (
+AddPostPage.getLayout = (page: any) => (
   <DashboardLayout>{page}</DashboardLayout>
 );
 
-export default AddStorePage;
+export default AddPostPage;

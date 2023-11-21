@@ -11,6 +11,7 @@ import TreeViewPlugin from './plugins/TreeViewPlugin';
 
 import MyCustomAutoFocusPlugin from './plugins/MyCustomAutoFoucusPlugin';
 import { useState } from 'react';
+import { $getRoot, $getSelection } from 'lexical';
 
 import { AutoFocusPlugin } from '@lexical/react/LexicalAutoFocusPlugin';
 // import { LinkPlugin } from '@lexical/react/LexicalLinkPlugin';
@@ -22,14 +23,33 @@ import { TabIndentationPlugin } from '@lexical/react/LexicalTabIndentationPlugin
 import { LexicalComposer } from '@lexical/react/LexicalComposer';
 import { ContentEditable } from '@lexical/react/LexicalContentEditable';
 import LexicalErrorBoundary from '@lexical/react/LexicalErrorBoundary';
-
+import { stringify } from 'querystring';
 export default function Editor() {
-  // const [editorState, setEditorState] = useState<string>(''); // Assuming editorState is meant to store JSON as a string
-  // function onChange(newEditorState: any) {
-  //   const editorStateJSON = JSON.stringify(newEditorState.toJSON());
-  //   setEditorState(editorStateJSON);
-  // }
-  console.log(onChange);
+  const [editorState, setEditorState] = useState<string>('');
+  const [onChangeValues, setOnChangeValues] = useState<any>({});
+
+  function handleEditorChange(newEditorState: any) {
+    const editorStateJSON = JSON.stringify(newEditorState.toJSON());
+    setEditorState(editorStateJSON);
+    console.log(editorStateJSON);
+  }
+
+  function onChange(editorState: any) {
+    editorState.read(() => {
+      // Read the contents of the EditorState here.
+      const root = $getRoot();
+      const selection = $getSelection();
+
+      setOnChangeValues({ root, selection });
+      // TODO: RETURN THE DOM OF THE EDITOR STATE
+      // const parser = new DOMParser();
+      // const dom = parser.parseFromString(model, 'text/html');
+
+      // console.log(root, selection);
+    });
+  }
+
+  // console.log('hello from leXIxal', editorState);
 
   return (
     <LexicalComposer initialConfig={editorConfig}>
@@ -38,26 +58,33 @@ export default function Editor() {
         <div className="editor-inner">
           <RichTextPlugin
             contentEditable={
-              <ContentEditable className="editor-input" />
+              <ContentEditable
+                className="editor-input"
+                onChange={handleEditorChange}
+              />
             }
             placeholder={<Placeholder />}
             ErrorBoundary={LexicalErrorBoundary}
           />
-          {/* <ListPlugin /> */}
+          <OnChangePlugin onChange={onChange} />
           <HistoryPlugin />
           <AutoFocusPlugin />
-          {/* <CodeHighlightPlugin /> */}
-          {/* <LinkPlugin /> */}
           <TabIndentationPlugin />
-          {/* <AutoLinkPlugin /> */}
-          {/* <MarkdownShortcutPlugin transformers={TRANSFORMERS} /> */}
           <TreeViewPlugin />
+          {/* Other plugins */}
         </div>
+      </div>
+      <OnChangePlugin onChange={onChange} />
+
+      <div className="onChangeValues">
+        <h3>onChange Values</h3>
+        <pre>{stringify(onChangeValues)}</pre>
       </div>
     </LexicalComposer>
   );
 }
 
+// Placeholder component remains the same
 function Placeholder() {
   return (
     <div className="editor-placeholder">Enter some plain text...</div>

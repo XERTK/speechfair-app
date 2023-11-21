@@ -5,67 +5,83 @@ import * as yup from 'yup';
 import CustomField from '@/components/custom-field';
 import { Button, Grid } from '@mui/material';
 import { toast } from 'react-toastify';
-import { useUpdateUserMutation } from '@/store/user';
 import Loader from '@/components/loader';
 import { useRouter } from 'next/router';
 import CustomSelectField from '@/components/custom-select';
 import {
+  AUTH_URL,
   CONTENT_BRANDS,
   CONTENT_CATEGORY,
   CONTENT_REGIONS,
 } from '@/configs/constants';
 import Editor from '@/components/lexicalEditor';
+import {
+  useCreatePostMutation,
+  useUpdatePostMutation,
+} from '@/store/post';
+import { useAuth } from '@/hooks/use-auth';
+import { log } from 'console';
 
 interface FormData {
-  headline: string;
   tags?: string;
-  email: string;
-  brandTo?: [string];
-  region?: [string];
-  category?: [string];
-  password?: string;
+  headline: string;
+  brandTo: string;
+  region: string;
+  category: string;
   postBody?: string;
 }
-
 const schema = yup.object().shape({
-  headline: yup.string().required(),
-  email: yup.string().email().required(),
-  password: yup.string().min(8).max(32),
-  // postBody: yup.string(),
+  headline: yup.string().required('headline is required'),
+  brandTo: yup.string().required('BRAND is required'),
+  region: yup.string().required('REGION is required'),
+  category: yup.string().required('CATEGORY is required'),
+  tags: yup.string(),
+  postBOdy: yup.string(),
 });
 
-const PostForm: React.FC<{ user: any }> = ({ user }) => {
+const PostForm: React.FC<{ post: any }> = ({ post }) => {
   const router = useRouter();
-  console.log('user', user);
+
   const {
-    register,
     control,
     handleSubmit,
     formState: { errors },
   } = useForm<FormData>({
     defaultValues: {
-      email: user?.email,
+      headline: post?.headline || '',
+      tags: post?.tags || '',
+      brandTo: post?.brand || '',
+      region: post?.region || '',
     },
     resolver: yupResolver(schema),
   });
 
-  const [updateUser, { isLoading: updateLoading }] =
-    useUpdateUserMutation();
+  const [updatePost, { isLoading: updateLoading }] =
+    useUpdatePostMutation();
+  const [createPost, { isLoading: createLoading }] =
+    useCreatePostMutation();
+  const { user }: any = useAuth();
 
   const onSubmit: SubmitHandler<FormData> = async (data) => {
-    // try {
-    console.log(data);
-    // if (user) {
-    //   await updateUser({
-    //     id: user.id,
-    //     body: data,
-    //   });
-    // }
-    //   toast.success('User updated');
-    //   router.replace('/users');
-    // } catch (error: any) {
-    //   toast.error(error?.data?.message || error.error);
-    // }
+    try {
+      if (post) {
+        await updatePost({
+          id: post.uid,
+          body: data,
+        });
+      } else {
+        await createPost({
+          body: {
+            userId: user.uid,
+            ...data,
+          },
+        });
+      }
+      toast.success('Post updated');
+      router.replace(`/admin/posts`);
+    } catch (error: any) {
+      toast.error(error?.data?.message || error.error);
+    }
   };
   return (
     <form onSubmit={handleSubmit(onSubmit)} noValidate>
@@ -90,7 +106,7 @@ const PostForm: React.FC<{ user: any }> = ({ user }) => {
               options={CONTENT_REGIONS}
             />
           </Grid>
-          <Grid item>
+          <Grid item xs={12} md={4}>
             <CustomSelectField
               name="category"
               label="Category"
@@ -107,7 +123,7 @@ const PostForm: React.FC<{ user: any }> = ({ user }) => {
               label="Tags"
               placeholder="Enter your tags here"
               control={control}
-              error={errors.tags} // Use errors.Tags?.message to display validation error
+              error={errors.tags}
             />
           </Grid>
           <Grid item xs={12} md={4}>
@@ -116,16 +132,12 @@ const PostForm: React.FC<{ user: any }> = ({ user }) => {
               name="headline"
               label="Headline"
               control={control}
-              error={errors.headline} // Use errors.name?.message to display validation error
+              error={errors.headline}
             />
           </Grid>
         </Grid>
         <Grid item xs={12} md={4}>
-          <Editor
-            name="postBody"
-            control={control}
-            error={errors.headline}
-          />
+          <Editor />
         </Grid>
 
         <Grid item xs={12} md={4}></Grid>
