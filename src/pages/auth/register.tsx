@@ -367,4 +367,6 @@ Page.getLayout = (page: any) => (
   <AuthLayout backgroundImage={newBackgroudImg}>{page}</AuthLayout>
 );
 
+Page.authGuard = false;
+
 export default Page;

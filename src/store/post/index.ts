@@ -13,6 +13,7 @@ import {
   getDoc,
   setDoc,
   addDoc,
+  serverTimestamp,
 } from 'firebase/firestore';
 import { apiSlice } from '../api';
 import db from '@/configs/firestore';
@@ -31,36 +32,38 @@ export const postsApi = apiSlice.injectEndpoints({
             : [];
 
           const postQuery = query(
-            postsCollection
-            // orderBy('id'),
-            // where('uid', '>=', params.search || '')
-            // limit(params.limit),
-            // ...pagination
+            postsCollection,
+            orderBy('id'),
+            where('id', '>=', params.search || ''),
+            limit(params.limit),
+            ...pagination
           );
 
           const resultsSnapshot = await getDocs(postQuery);
-          const results = resultsSnapshot.docs.map((postDoc) => ({
-            id: postDoc.id,
-            ...postDoc.data(),
-          }));
-          console.log(resultsSnapshot);
+          const results = resultsSnapshot.docs.map((postDoc) => {
+            const postData: any = postDoc.data();
+            return {
+              ...postData,
+              timestamp: postData.timestamp.toDate().toISOString(), // Convert Timestamp to Date object or use the properties as needed
+            };
+          });
 
-          // const totalResultsQuery = query(
-          //   postsCollection,
-          //   where('headline', '>=', params.search || '')
-          // );
-          // const totalResults = (
-          //   await getCountFromServer(totalResultsQuery)
-          // ).data().count;
+          const totalResultsQuery = query(
+            postsCollection,
+            where('id', '>=', params.search || '')
+          );
+          const totalResults = (
+            await getCountFromServer(totalResultsQuery)
+          ).data().count;
 
-          // const lastVisible =
-          //   results.length > 0 ? results[results.length - 1].id : '';
+          const lastVisible =
+            results.length > 0 ? results[results.length - 1].id : '';
 
           return {
             data: {
               results,
-              // totalResults,
-              // lastVisible,
+              totalResults,
+              lastVisible,
             },
           };
         } catch (error: any) {
@@ -102,10 +105,17 @@ export const postsApi = apiSlice.injectEndpoints({
     createPost: builder.mutation({
       async queryFn({ body }: any) {
         try {
-          console.log(body);
           const postsCollection = collection(db, POSTS_PATH);
-          const docRef = await addDoc(postsCollection, body);
-          return { data: docRef };
+          const docRef = doc(postsCollection);
+          console.log(docRef);
+          const data = {
+            id: docRef.id,
+            ...body,
+            timestamp: serverTimestamp(),
+          };
+          await setDoc(docRef, data);
+
+          return { data };
         } catch (error: any) {
           return { error };
         }

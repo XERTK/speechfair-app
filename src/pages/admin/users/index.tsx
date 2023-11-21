@@ -19,9 +19,18 @@ import { useRouter } from 'next/router';
 import NextLink from 'next/link';
 
 const columns = [
-  { field: 'id', flex: 1 },
-  { field: 'name', flex: 1 },
-  { field: 'email', flex: 1 },
+  { field: 'id', headerName: 'ID', flex: 1 },
+  {
+    field: 'firstName',
+    headerName: 'Name',
+    flex: 1,
+    renderCell: ({ row }: any) => {
+      console.log(row);
+
+      return `${row.firstName}  ${row.lastName}`;
+    },
+  },
+  { field: 'email', headerName: 'Email', flex: 1 },
 ];
 
 const UsersPage = () => {

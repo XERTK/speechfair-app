@@ -28,8 +28,8 @@ export const usersApi = apiSlice.injectEndpoints({
 
           const userQuery = query(
             usersCollection,
-            orderBy('uid'),
-            where('uid', '>=', params.search || ''),
+            orderBy('id'),
+            where('id', '>=', params.search || ''),
             limit(params.limit),
             ...pagination
           );

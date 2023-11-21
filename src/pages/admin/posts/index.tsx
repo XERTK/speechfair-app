@@ -19,12 +19,12 @@ import {
 } from '@/store/post';
 
 const columns = [
-  { field: 'admin', flex: 1 },
-  { field: 'Headline', flex: 1 },
-  { field: 'Region', flex: 1 },
-  { field: 'Brand', flex: 1 },
+  { field: 'userId', flex: 1 },
+  { field: 'headline', flex: 1 },
+  { field: 'region', flex: 1 },
+  { field: 'brandTo', flex: 1 },
   { field: 'status', flex: 1 },
-  { field: 'Metrics', flex: 1 },
+  { field: 'metrics', flex: 1 },
 ];
 
 const PostsPage = () => {
