@@ -9,10 +9,19 @@ export const authSlice = apiSlice.injectEndpoints({
       async queryFn() {
         try {
           const user = JSON.parse(localStorage.getItem('user') || '');
-          const snapShot = await getDoc(doc(db, USERS_PATH, user.id));
-          const data = snapShot.data();
-          return { data };
+
+          const userDocRef = doc(db, USERS_PATH, user.uid);
+          const snapShot = await getDoc(userDocRef);
+
+          if (snapShot.exists()) {
+            const data = snapShot.data();
+            return { data };
+          } else {
+            console.log('Document does not exist.');
+            return { error: 'Document does not exist' };
+          }
         } catch (error: any) {
+          console.error('Error fetching document:', error);
           return { error };
         }
       },
