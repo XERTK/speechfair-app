@@ -2,10 +2,10 @@ import { Box, Container, Typography } from '@mui/material';
 import { DashboardLayout } from '@/layouts/dashboard/layout';
 import AdminBreadcrumbs from '@/components/breadcrums';
 import { useParams } from 'next/navigation';
-import PostForm from '@/views/posts/PostForm';
+import CommentForm from '@/views/comments/CommentForm';
 import { useGetPostQuery } from '@/store/post';
 
-const AddPostPage = () => {
+const AddCommentPage = () => {
   const params = useParams<any>();
 
   const { data } = useGetPostQuery<any>(params?.id, {
@@ -22,17 +22,17 @@ const AddPostPage = () => {
         }}
       >
         <Container maxWidth="xl">
-          <Typography variant="h4">Edit Post</Typography>
+          <Typography variant="h4">Edit Comment</Typography>
           <AdminBreadcrumbs />
-          <PostForm post={data} key={data?.id} />
+          <CommentForm post={data} key={data?.id} />
         </Container>
       </Box>
     </>
   );
 };
 
-AddPostPage.getLayout = (page: any) => (
+AddCommentPage.getLayout = (page: any) => (
   <DashboardLayout>{page}</DashboardLayout>
 );
 
-export default AddPostPage;
+export default AddCommentPage;

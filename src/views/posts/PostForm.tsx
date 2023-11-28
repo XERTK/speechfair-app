@@ -20,7 +20,6 @@ import {
   useUpdatePostMutation,
 } from '@/store/post';
 import { useAuth } from '@/hooks/use-auth';
-import { log } from 'console';
 
 interface FormData {
   tags?: string;

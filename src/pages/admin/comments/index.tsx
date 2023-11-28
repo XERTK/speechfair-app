@@ -16,18 +16,20 @@ import NextLink from 'next/link';
 import {
   useDeletePostMutation,
   useGetPostsQuery,
-} from '@/store/post';
+} from '@/store/comment';
 
 const columns = [
-  { field: 'userId', flex: 1 },
-  { field: 'headline', flex: 1 },
-  { field: 'region', flex: 1 },
-  { field: 'brandTo', flex: 1 },
-  { field: 'status', flex: 1 },
-  { field: 'metrics', flex: 1 },
+  { field: 'Name', flex: 1 },
+  { field: 'Post Title', flex: 1 },
+  { field: 'Comment', flex: 1 },
+  { field: 'IP Address', flex: 1 },
+  { field: 'Device', flex: 1 },
+  { field: 'Date & Time', flex: 1 },
+  { field: 'Edit History', flex: 1 },
+  { field: 'Metrics', flex: 1 },
 ];
 
-const PostsPage = () => {
+const CommentsPage = () => {
   const router = useRouter();
   const [query, setQuery] = useState({
     page: 0,
@@ -50,8 +52,8 @@ const PostsPage = () => {
       <Container maxWidth="xl">
         <Stack spacing={3}>
           <Stack direction="row" spacing={1}>
-            <Typography variant="h4">Posts</Typography>
-            <NextLink href="/admin/posts/add">
+            <Typography variant="h4">Comments</Typography>
+            <NextLink href="/admin/comments/add">
               <Button
                 startIcon={
                   <SvgIcon fontSize="small">
@@ -73,12 +75,6 @@ const PostsPage = () => {
             query={query}
             setQuery={setQuery}
             lastVisible={data?.lastVisible}
-            onEdit={(id: any) => {
-              router.replace(`/admin/posts/${id}`);
-            }}
-            onDelete={(id: any) => {
-              deletePost(id);
-            }}
           />
         </Stack>
       </Container>
@@ -86,8 +82,8 @@ const PostsPage = () => {
   );
 };
 
-PostsPage.getLayout = (page: any) => (
+CommentsPage.getLayout = (page: any) => (
   <DashboardLayout>{page}</DashboardLayout>
 );
 
-export default PostsPage;
+export default CommentsPage;
