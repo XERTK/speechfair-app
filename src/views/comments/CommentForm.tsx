@@ -16,12 +16,10 @@ import { useAuth } from '@/hooks/use-auth';
 interface FormData {
   comment?: string;
   postTitle: string;
-  date: string;
   device: string;
 }
 const schema = yup.object().shape({
   postTitle: yup.string().required('postTitle is required'),
-  date: yup.string().required('BRAND is required'),
   device: yup.string().required('device is required'),
   comment: yup.string(),
 });
@@ -37,7 +35,6 @@ const CommentForm: React.FC<{ post: any }> = ({ post }) => {
     defaultValues: {
       postTitle: post?.postTitle || '',
       comment: post?.comment || '',
-      date: post?.date || '',
       device: post?.device || '',
     },
     resolver: yupResolver(schema),
@@ -53,12 +50,12 @@ const CommentForm: React.FC<{ post: any }> = ({ post }) => {
     try {
       await createPost({
         body: {
-          userId: user.uid,
+          userId: user.id,
           ...data,
         },
       });
       toast.success('Comment updated');
-      router.replace(`/admin/comments`);
+      // router.replace(`/admin/comments`);
     } catch (error: any) {
       toast.error(error?.data?.message || error.error);
     }
@@ -84,15 +81,6 @@ const CommentForm: React.FC<{ post: any }> = ({ post }) => {
               label="Post Title"
               control={control}
               error={errors.postTitle}
-            />
-          </Grid>
-          <Grid item xs={12} md={4}>
-            <CustomField
-              variant="filled"
-              name="date"
-              label="date"
-              control={control}
-              error={errors.date}
             />
           </Grid>
           <Grid item xs={12} md={4}>

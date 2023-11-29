@@ -72,7 +72,7 @@ const PostForm: React.FC<{ post: any }> = ({ post }) => {
       } else {
         await createPost({
           body: {
-            userId: user.uid,
+            userId: user.id,
             ...data,
           },
         });

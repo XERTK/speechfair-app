@@ -23,6 +23,38 @@ import { log } from 'console';
 
 export const postsApi = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
+    createPost: builder.mutation({
+      async queryFn({ body }: any) {
+        try {
+          const postsCollection = collection(db, POSTS_PATH);
+          const docRef = doc(postsCollection);
+          console.log(docRef);
+          const data = {
+            id: docRef.id,
+            ...body,
+            timestamp: serverTimestamp(),
+          };
+          await setDoc(docRef, data);
+          return { data: { message: 'post added successfully' } };
+        } catch (error: any) {
+          return { error };
+        }
+      },
+      invalidatesTags: ['Post'],
+    }),
+
+    updatePost: builder.mutation({
+      async queryFn({ id, body }: any) {
+        try {
+          await updateDoc(doc(db, POSTS_PATH, id), body);
+          return { data: { message: 'post updated successfully' } };
+        } catch (error: any) {
+          return { error };
+        }
+      },
+      invalidatesTags: ['Post'],
+    }),
+
     getPosts: builder.query({
       async queryFn(params) {
         try {
@@ -78,6 +110,7 @@ export const postsApi = apiSlice.injectEndpoints({
       },
       providesTags: ['Post'],
     }),
+
     getPost: builder.query({
       async queryFn(id: any) {
         try {
@@ -91,36 +124,6 @@ export const postsApi = apiSlice.injectEndpoints({
       providesTags: ['Post'],
     }),
 
-    createPost: builder.mutation({
-      async queryFn({ body }: any) {
-        try {
-          const postsCollection = collection(db, POSTS_PATH);
-          const docRef = doc(postsCollection);
-          console.log(docRef);
-          const data = {
-            id: docRef.id,
-            ...body,
-            timestamp: serverTimestamp(),
-          };
-          await setDoc(docRef, data);
-          return { data: { message: 'post added successfully' } };
-        } catch (error: any) {
-          return { error };
-        }
-      },
-      invalidatesTags: ['Post'],
-    }),
-    updatePost: builder.mutation({
-      async queryFn({ id, body }: any) {
-        try {
-          await updateDoc(doc(db, POSTS_PATH, id), body);
-          return { data: { message: 'post updated successfully' } };
-        } catch (error: any) {
-          return { error };
-        }
-      },
-      invalidatesTags: ['Post'],
-    }),
     deletePost: builder.mutation({
       async queryFn(id) {
         try {

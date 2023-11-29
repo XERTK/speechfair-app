@@ -14,77 +14,96 @@ import {
   setDoc,
   addDoc,
   serverTimestamp,
+  arrayUnion,
 } from 'firebase/firestore';
 import { apiSlice } from '../api';
 import db from '@/configs/firestore';
-import { POSTS_PATH } from '@/configs/constants';
+import { COMMENTS_PATH, POSTS_PATH } from '@/configs/constants';
+import comments from '@/pages/admin/comments';
 
 export const commentsApi = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
     createComment: builder.mutation({
       async queryFn({ body }: any) {
         try {
-          const postsCollection = collection(db, POSTS_PATH);
-          const docRef = doc(postsCollection);
-          console.log(docRef);
-          const data = {
-            id: docRef.id,
+          const postRef = doc(db, POSTS_PATH, 'kzcPiLwcIjPpU34NEl5q');
+
+          const commentsCollectionRef = collection(
+            postRef,
+            COMMENTS_PATH
+          );
+
+          const commentDocRef = doc(
+            commentsCollectionRef,
+            body.userId
+          );
+
+          const commentData = {
             ...body,
-            timestamp: serverTimestamp(),
+            timestamp: new Date(),
           };
-          await setDoc(docRef, data);
-          return { data: { message: 'post added successfully' } };
+
+          const commentDoc = await getDoc(commentDocRef);
+
+          if (commentDoc.exists()) {
+            const existingData = commentDoc.data();
+            if (
+              existingData &&
+              existingData.comments &&
+              Array.isArray(existingData.comments)
+            ) {
+              if (
+                !existingData.comments.some(
+                  (comment: any) => comment.id === body.userId
+                )
+              ) {
+                await updateDoc(commentDocRef, {
+                  comments: arrayUnion(commentData),
+                });
+              }
+            }
+          } else {
+            await setDoc(commentDocRef, { comments: [commentData] });
+          }
+
+          return { data: { message: 'comment added successfully' } };
         } catch (error: any) {
           return { error };
         }
       },
       invalidatesTags: ['Post'],
     }),
-    getPosts: builder.query({
+
+    getComments: builder.query({
       async queryFn(params) {
         try {
-          const postsCollection = collection(db, POSTS_PATH);
-          const pagination = params.lastVisible
-            ? [startAfter(params.lastVisible)]
-            : [];
-
-          const postQuery = query(
-            postsCollection,
-            orderBy('id'),
-            where('id', '>=', params.search || ''),
-            limit(params.limit),
-            ...pagination
+          const postsSnapshot = await getDocs(
+            collection(db, POSTS_PATH)
           );
+          const allComments: any = [];
 
-          const resultsSnapshot = await getDocs(postQuery);
-          const results = resultsSnapshot.docs.map((postDoc) => {
-            const postData: any = postDoc.data();
-            return {
-              ...postData,
-              timestamp: postData.timestamp.toDate().toISOString(), // Convert Timestamp to Date object or use the properties as needed
-            };
-          });
+          for (const postDoc of postsSnapshot.docs) {
+            const commentsCollection = collection(
+              doc(db, POSTS_PATH, postDoc.id),
+              COMMENTS_PATH
+            );
 
-          const totalResultsQuery = query(
-            postsCollection,
-            where('id', '>=', params.search || '')
-          );
-          const totalResults = (
-            await getCountFromServer(totalResultsQuery)
-          ).data().count;
-
-          const lastVisible =
-            results.length > 0 ? results[results.length - 1].id : '';
+            const commentsSnapshot = await getDocs(
+              commentsCollection
+            );
+            commentsSnapshot.docs.forEach((commentDoc) => {
+              const commentData = commentDoc.data();
+              allComments.push(commentData);
+            });
+          }
 
           return {
             data: {
-              results,
-              totalResults,
-              lastVisible,
+              results: allComments,
             },
           };
         } catch (error: any) {
-          console.error('Failed to fetch posts:', error);
+          console.error('Failed to fetch comments:', error);
           return {
             error: {
               status: 'API_ERROR',
@@ -95,6 +114,7 @@ export const commentsApi = apiSlice.injectEndpoints({
       },
       providesTags: ['Post'],
     }),
+
     getPost: builder.query({
       async queryFn(id: any) {
         try {
@@ -134,7 +154,7 @@ export const commentsApi = apiSlice.injectEndpoints({
 
 export const {
   useCreateCommentMutation,
-  useGetPostsQuery,
+  useGetCommentsQuery,
   useGetPostQuery,
   useUpdatePostMutation,
   useDeletePostMutation,

@@ -15,7 +15,7 @@ import { useRouter } from 'next/router';
 import NextLink from 'next/link';
 import {
   useDeletePostMutation,
-  useGetPostsQuery,
+  useGetCommentsQuery,
 } from '@/store/comment';
 
 const columns = [
@@ -36,7 +36,7 @@ const CommentsPage = () => {
     limit: 5,
   });
 
-  const { data } = useGetPostsQuery<any>(query);
+  const { data } = useGetCommentsQuery<any>(query);
   const [deletePost] = useDeletePostMutation();
 
   console.log('data for the reult', data);
@@ -68,14 +68,14 @@ const CommentsPage = () => {
             </NextLink>
           </Stack>
           {/* // TODO: Fetch tolat row count */}
-          <DataTable
+          {/* <DataTable
             rows={data?.results}
             rowCount={data?.totalResults}
             columns={columns}
             query={query}
             setQuery={setQuery}
             lastVisible={data?.lastVisible}
-          />
+          /> */}
         </Stack>
       </Container>
     </Box>
