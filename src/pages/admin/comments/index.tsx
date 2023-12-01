@@ -18,10 +18,7 @@ import DataTable from '@/components/data-table';
 import { DashboardLayout } from '@/layouts/dashboard/layout';
 import { useRouter } from 'next/router';
 import NextLink from 'next/link';
-import {
-  useDeleteCommentMutation,
-  useGetCommentsQuery,
-} from '@/store/comment';
+import { useGetCommentsQuery } from '@/store/comment';
 import { format } from 'date-fns';
 
 const columns = [
