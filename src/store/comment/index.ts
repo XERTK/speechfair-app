@@ -22,28 +22,6 @@ import { COMMENTS_PATH, POSTS_PATH } from '@/configs/constants';
 
 export const commentsApi = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
-    // createComment: builder.mutation({
-    //   async queryFn({ body }: any) {
-    //     try {
-    //       const commentsCollection = collection(db, COMMENTS_PATH);
-    //       const docRef = doc(commentsCollection);
-    //       console.log(docRef);
-    //       const data = [
-    //         {
-    //           id: docRef.id,
-    //           ...body,
-    //           timestamp: serverTimestamp(),
-    //         },
-    //       ];
-    //       await setDoc(docRef, data);
-    //       return { data: { message: 'post added successfully' } };
-    //     } catch (error: any) {
-    //       return { error };
-    //     }
-    //   },
-    //   invalidatesTags: ['Comment'],
-    // }),
-
     createComment: builder.mutation({
       async queryFn({ body }: any) {
         try {
@@ -56,7 +34,7 @@ export const commentsApi = apiSlice.injectEndpoints({
 
           const commentData = {
             ...body,
-            timestamp: new Date(),
+            timestamp: Date.now(),
           };
 
           const commentDoc = await getDoc(commentDocRef);

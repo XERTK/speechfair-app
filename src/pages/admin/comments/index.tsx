@@ -22,8 +22,7 @@ import {
   useDeleteCommentMutation,
   useGetCommentsQuery,
 } from '@/store/comment';
-import { limit, query } from 'firebase/firestore';
-import { array } from 'prop-types';
+import { format } from 'date-fns';
 
 const columns = [
   {
@@ -60,8 +59,8 @@ const columns = [
     headerName: 'Date & Time',
     renderCell: (params: any) => {
       const timestamp = params.row.Comment.timestamp;
-      const date = new Date(timestamp.seconds * 1000);
-      const formattedDate = date.toLocaleString();
+      const date = new Date(timestamp);
+      const formattedDate = format(date, 'yyyy-MM-dd HH:mm:ss');
       return formattedDate;
     },
   },
@@ -94,27 +93,20 @@ const columns = [
           >
             <DialogTitle>{'Your previous History'}</DialogTitle>
             <DialogContent>
-              <DialogContentText id="alert-dialog-slide-description">
-                {commentsJSON.map((comment: any, index: number) => (
-                  <div
-                    key={index}
-                    style={{
-                      marginBottom: '20px',
-                      borderBottom: '1px solid #ccc',
-                      paddingBottom: '10px',
-                    }}
-                  >
-                    <p>
-                      Date:{' '}
-                      {new Date(
-                        comment.timestamp.seconds * 1000
-                      ).toLocaleString()}
-                    </p>
-                    <p>Comment: {comment.comment}</p>
-                  </div>
-                ))}
-              </DialogContentText>
+              {commentsJSON.map((comment: any, index: number) => (
+                <div key={index}>
+                  <p>
+                    Date:{' '}
+                    {new Date(
+                      comment.timestamp.seconds * 1000
+                    ).toLocaleString()}
+                  </p>
+                  <p>Comment: {comment.comment}</p>
+                  {index < commentsJSON.length - 1 && <hr />}
+                </div>
+              ))}
             </DialogContent>
+
             <DialogActions>
               <Button onClick={handleClose}>Close</Button>
             </DialogActions>
@@ -147,12 +139,6 @@ const CommentsPage = () => {
   });
 
   const { data } = useGetCommentsQuery<any>(query);
-  const [deletePost] = useDeleteCommentMutation();
-  console.log('Table data: ', data);
-  console.log(
-    'Comment.postTitle from data:',
-    data?.results[0]?.Comment?.postTitle
-  );
 
   return (
     <Box
