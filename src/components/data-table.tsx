@@ -55,7 +55,7 @@ const DataTable = (props: any) => {
     }
     setQuery(filterNotNullOrEmptyFields(t));
   }, [paginationModel, setQuery, search]);
-
+  console.log('Received rows data:', rows);
   const debouncedSearch = debounce(async (text) => {
     setSearch(text);
   }, 1000);

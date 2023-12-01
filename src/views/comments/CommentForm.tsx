@@ -51,6 +51,10 @@ const CommentForm: React.FC<{ post: any }> = ({ post }) => {
       await createPost({
         body: {
           userId: user.id,
+          name: user.firstName,
+          postId: 'kzcPiLwcIjPpU34NEl5q',
+          upVotes: 3,
+          downVotes: 3,
           ...data,
         },
       });

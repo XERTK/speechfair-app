@@ -19,19 +19,35 @@ import {
 import { apiSlice } from '../api';
 import db from '@/configs/firestore';
 import { COMMENTS_PATH, POSTS_PATH } from '@/configs/constants';
-import comments from '@/pages/admin/comments';
 
 export const commentsApi = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
+    // createComment: builder.mutation({
+    //   async queryFn({ body }: any) {
+    //     try {
+    //       const commentsCollection = collection(db, COMMENTS_PATH);
+    //       const docRef = doc(commentsCollection);
+    //       console.log(docRef);
+    //       const data = [
+    //         {
+    //           id: docRef.id,
+    //           ...body,
+    //           timestamp: serverTimestamp(),
+    //         },
+    //       ];
+    //       await setDoc(docRef, data);
+    //       return { data: { message: 'post added successfully' } };
+    //     } catch (error: any) {
+    //       return { error };
+    //     }
+    //   },
+    //   invalidatesTags: ['Comment'],
+    // }),
+
     createComment: builder.mutation({
       async queryFn({ body }: any) {
         try {
-          const postRef = doc(db, POSTS_PATH, 'kzcPiLwcIjPpU34NEl5q');
-
-          const commentsCollectionRef = collection(
-            postRef,
-            COMMENTS_PATH
-          );
+          const commentsCollectionRef = collection(db, COMMENTS_PATH);
 
           const commentDocRef = doc(
             commentsCollectionRef,
@@ -63,7 +79,10 @@ export const commentsApi = apiSlice.injectEndpoints({
               }
             }
           } else {
-            await setDoc(commentDocRef, { comments: [commentData] });
+            await setDoc(commentDocRef, {
+              id: commentDocRef.id,
+              comments: [commentData],
+            });
           }
 
           return { data: { message: 'comment added successfully' } };
@@ -71,39 +90,68 @@ export const commentsApi = apiSlice.injectEndpoints({
           return { error };
         }
       },
-      invalidatesTags: ['Post'],
+      invalidatesTags: ['Comment'],
     }),
 
     getComments: builder.query({
       async queryFn(params) {
         try {
-          const postsSnapshot = await getDocs(
-            collection(db, POSTS_PATH)
+          const commentsCollection = collection(db, COMMENTS_PATH);
+          const pagination = params.lastVisible
+            ? [startAfter(params.lastVisible)]
+            : [];
+
+          const commentQuery = query(
+            commentsCollection,
+            orderBy('id'),
+            where('id', '>=', params.search || ''),
+            limit(params.limit),
+            ...pagination
           );
-          const allComments: any = [];
 
-          for (const postDoc of postsSnapshot.docs) {
-            const commentsCollection = collection(
-              doc(db, POSTS_PATH, postDoc.id),
-              COMMENTS_PATH
-            );
+          const resultsSnapshot = await getDocs(commentQuery);
+          const results = resultsSnapshot.docs.map((commentDoc) => {
+            const commentData: any = commentDoc.data();
+            return {
+              ...commentData,
+            };
+          });
 
-            const commentsSnapshot = await getDocs(
-              commentsCollection
-            );
-            commentsSnapshot.docs.forEach((commentDoc) => {
-              const commentData = commentDoc.data();
-              allComments.push(commentData);
-            });
-          }
+          const totalResultsQuery = query(
+            commentsCollection,
+            where('id', '>=', params.search || '')
+          );
+          const totalResults = (
+            await getCountFromServer(totalResultsQuery)
+          ).data().count;
+
+          const lastVisible =
+            results.length > 0 ? results[results.length - 1].id : '';
+
+          const newResults: any = results.map((commentDoc) => {
+            const lastIndex = commentDoc.comments.length - 1; // Get the last index of the array
+            let latestComment = null; // Initialize latestComment
+
+            if (lastIndex >= 0) {
+              latestComment = commentDoc.comments[lastIndex];
+            } else {
+              console.log('The array is empty');
+            }
+            return {
+              ...commentDoc,
+              Comment: latestComment,
+            };
+          });
 
           return {
             data: {
-              results: allComments,
+              results: newResults,
+              totalResults,
+              lastVisible,
             },
           };
         } catch (error: any) {
-          console.error('Failed to fetch comments:', error);
+          console.error('Failed to fetch posts:', error);
           return {
             error: {
               status: 'API_ERROR',
@@ -112,42 +160,44 @@ export const commentsApi = apiSlice.injectEndpoints({
           };
         }
       },
-      providesTags: ['Post'],
+      providesTags: ['Comment'],
     }),
 
-    getPost: builder.query({
+    getComment: builder.query({
       async queryFn(id: any) {
         try {
-          const snapShot = await getDoc(doc(db, POSTS_PATH, id));
+          const snapShot = await getDoc(doc(db, COMMENTS_PATH, id));
           const data = snapShot.data();
           return { data };
         } catch (error: any) {
           return { error };
         }
       },
-      providesTags: ['Post'],
+      providesTags: ['Comment'],
     }),
-    updatePost: builder.mutation({
+
+    updateComment: builder.mutation({
       async queryFn({ id, body }: any) {
         try {
-          await updateDoc(doc(db, POSTS_PATH, id), body);
+          await updateDoc(doc(db, COMMENTS_PATH, id), body);
           return { data: { message: 'post updated successfully' } };
         } catch (error: any) {
           return { error };
         }
       },
-      invalidatesTags: ['Post'],
+      invalidatesTags: ['Comment'],
     }),
-    deletePost: builder.mutation({
+
+    deleteComment: builder.mutation({
       async queryFn(id) {
         try {
-          await deleteDoc(doc(db, POSTS_PATH, id));
+          await deleteDoc(doc(db, COMMENTS_PATH, id));
           return { data: 'Document is Deleted successfully' };
         } catch (error: any) {
           return { error };
         }
       },
-      invalidatesTags: ['Post'],
+      invalidatesTags: ['Comment'],
     }),
   }),
 });
@@ -155,7 +205,7 @@ export const commentsApi = apiSlice.injectEndpoints({
 export const {
   useCreateCommentMutation,
   useGetCommentsQuery,
-  useGetPostQuery,
-  useUpdatePostMutation,
-  useDeletePostMutation,
+  useGetCommentQuery,
+  useUpdateCommentMutation,
+  useDeleteCommentMutation,
 } = commentsApi;
