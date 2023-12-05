@@ -4,7 +4,6 @@ import {
   inputLabelClasses,
   outlinedInputClasses,
   paperClasses,
-  tableCellClasses,
 } from '@mui/material';
 
 // Used only to create transitions
@@ -60,7 +59,9 @@ export function createComponents(config: any) {
       styleOverrides: {
         root: {
           borderRadius: 20,
-          width: '100%',
+          // width: '100%',
+          // minWidth: 400,
+
           [`&.${paperClasses.elevation1}`]: {
             boxShadow: '0px 5px 22px rgba(0, 0, 0, 0.5)',
           },
@@ -92,6 +93,7 @@ export function createComponents(config: any) {
         },
       },
     },
+
     MuiCssBaseline: {
       styleOverrides: {
         '*': {
