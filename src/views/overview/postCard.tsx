@@ -20,7 +20,7 @@ import {
   Typography,
 } from '@mui/material';
 
-export const OverviewBudget = (props: any) => {
+export const PostCard = (props: any) => {
   return (
     <Card>
       <CardContent>
@@ -217,7 +217,7 @@ export const OverviewBudget = (props: any) => {
   );
 };
 
-OverviewBudget.prototypes = {
+PostCard.prototypes = {
   difference: PropTypes.number,
   positive: PropTypes.bool,
   sx: PropTypes.object,

@@ -1,68 +1,81 @@
 import Head from 'next/head';
-import { subDays, subHours } from 'date-fns';
-import {
-  Box,
-  Container,
-  Unstable_Grid2 as Grid,
-} from '@mui/material';
-import { OverviewBudget } from '@/views/overview/overview-budget';
+import { Unstable_Grid2 as Grid } from '@mui/material';
+import { PostCard } from '@/views/overview/postCard';
 import { Layout } from '@/layouts/user/layout';
-import Carousel from 'react-material-ui-carousel';
-
 import { Swiper, SwiperSlide } from 'swiper/react';
 
-// Import Swiper styles
 import 'swiper/css';
 import 'swiper/css/pagination';
 import 'swiper/css/navigation';
-
-// import required modules
-import { Pagination, Navigation } from 'swiper/modules';
-const now = new Date();
+import { Navigation } from 'swiper/modules';
+import { useState } from 'react';
 
 const HomePage = () => {
-  var totalSteps = 4;
+  const [activeIndex, setActiveIndex] = useState(0);
+  const [totalSlides, setTotalSlides] = useState(7);
+  const [perView, setPerView] = useState(1);
+  console.log(activeIndex + ' active');
+  const progress: number = activeIndex * (totalSlides * perView);
+  const _progress = Math.min(Math.max(0, progress), 100);
 
-  function progressBar(e: any) {
-    //   //update progress
-    //   var step = $(e.relatedTarget).data('step');
-    //   var percent = (parseInt(step) / totalSteps) * 100;
-    //   $('.progress-bar').css({ width: percent + '%' });
-    //   $('.progress-bar').text('Step ' + step);
-  }
   return (
     <>
+      <div
+        className="progress_bar"
+        style={{
+          width: `${_progress}%`,
+          backgroundColor: 'red',
+          height: '5px',
+          position: 'fixed',
+          top: '0',
+          left: '0',
+          zIndex: '9999',
+          transition: 'width 0.3s ease-in-out',
+        }}
+      ></div>
       <Head>
         <title>Overview | Devias Kit</title>
       </Head>
-      <Box
-        component="main"
-        sx={{
-          flexGrow: 1,
-          py: 8,
-        }}
-      >
-        <Container>
-          <Swiper
-            slidesPerView={3}
-            spaceBetween={30}
-            pagination={{
-              clickable: true,
-              type: 'progressbar',
-            }}
-            navigation={true}
-            modules={[Pagination, Navigation]}
-          >
-            {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((item) => (
+
+      <Grid>
+        <Swiper
+          style={{
+            padding: '20px',
+          }}
+          slidesPerView={1}
+          breakpoints={{
+            640: {
+              width: 640,
+              slidesPerView: 1,
+            },
+
+            768: {
+              width: 768,
+              slidesPerView: 2,
+            },
+          }}
+          spaceBetween={170}
+          navigation={true}
+          modules={[Navigation]}
+          onRealIndexChange={(element) => {
+            setActiveIndex(element.activeIndex);
+            if (typeof element.params.slidesPerView === 'number') {
+              setPerView(element.params.slidesPerView);
+            }
+          }}
+        >
+          {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((item, index) => {
+            console.log(index); // Logs the index of the slide
+            return (
               <SwiperSlide key={item}>
                 <Grid xs={12} sm={6} key={item}>
-                  <OverviewBudget />
+                  <PostCard />
                 </Grid>
               </SwiperSlide>
-            ))}
-          </Swiper>
-        </Container>
-      </Box>
+            );
+          })}
+        </Swiper>
+      </Grid>
     </>
   );
 };

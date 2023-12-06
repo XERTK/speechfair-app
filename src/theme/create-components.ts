@@ -59,8 +59,8 @@ export function createComponents(config: any) {
       styleOverrides: {
         root: {
           borderRadius: 20,
-          // width: '100%',
-          // minWidth: 400,
+
+          minWidth: 420,
 
           [`&.${paperClasses.elevation1}`]: {
             boxShadow: '0px 5px 22px rgba(0, 0, 0, 0.5)',

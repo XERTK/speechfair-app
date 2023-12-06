@@ -5,7 +5,7 @@ import {
   Container,
   Unstable_Grid2 as Grid,
 } from '@mui/material';
-import { OverviewBudget } from '@/views/overview/overview-budget';
+import { PostCard } from '@/views/overview/postCard';
 import { OverviewTotalCustomers } from '@/views/overview/overview-total-customers';
 import { OverviewTasksProgress } from '@/views/overview/overview-tasks-progress';
 import { OverviewTotalProfit } from '@/views/overview/overview-total-profit';
@@ -30,7 +30,7 @@ const Page = () => (
       <Container maxWidth="xl">
         <Grid container spacing={3}>
           <Grid xs={12} sm={6} lg={3}>
-            <OverviewBudget
+            <PostCard
               difference={12}
               positive
               sx={{ height: '100%' }}
