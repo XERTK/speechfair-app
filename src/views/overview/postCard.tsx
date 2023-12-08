@@ -19,8 +19,34 @@ import {
   Stack,
   Typography,
 } from '@mui/material';
+import { useGetPostCommentsCountQuery } from '@/store/comment';
 
 export const PostCard = (props: any) => {
+  const {
+    data: commentDataCount,
+    isLoading,
+    isError,
+  } = useGetPostCommentsCountQuery({ postId: props.item.id });
+
+  console.log(commentDataCount, props.item.id);
+
+  let postData = null; // Initialize postData outside the conditional block
+
+  if (props.item) {
+    postData = props.item; // Assign props.item to postData if it exists
+  }
+  const countWords = (text: string): number => {
+    const words = text.split(/\s+/); // Split by whitespace
+    return words.length;
+  };
+
+  const summaryWordCount = postData
+    ? countWords(postData.summary)
+    : 0;
+
+  const summaryWordCountTime = summaryWordCount / 3.5 / 60;
+  const roundedTime = summaryWordCountTime.toFixed(1);
+
   return (
     <Card>
       <CardContent>
@@ -42,7 +68,7 @@ export const PostCard = (props: any) => {
               variant="body2"
               sx={{ alignContent: 'center', fontSize: 12 }}
             >
-              LW
+              {postData.brandTo}
             </Typography>
           </Stack>
           <Stack direction="row" alignItems="center" spacing={1}>
@@ -56,7 +82,7 @@ export const PostCard = (props: any) => {
               variant="body2"
               sx={{ alignContent: 'center', fontSize: 12 }}
             >
-              Glb
+              {postData.region}
             </Typography>
           </Stack>
 
@@ -64,7 +90,7 @@ export const PostCard = (props: any) => {
             variant="body2"
             sx={{ alignContent: 'center', fontSize: 12 }}
           >
-            #Glb
+            {postData.tags}
           </Typography>
         </Stack>
         <Typography
@@ -76,7 +102,7 @@ export const PostCard = (props: any) => {
             mb: '25px',
           }}
         >
-          Cristiano Ronaldo: An Inglorious End For United Talisman?
+          {postData?.headline}
         </Typography>
         <Stack
           alignItems="center"
@@ -95,7 +121,7 @@ export const PostCard = (props: any) => {
               variant="body2"
               sx={{ alignContent: 'center', fontSize: 12 }}
             >
-              LW
+              {roundedTime}m
             </Typography>
           </Stack>
 
@@ -110,7 +136,7 @@ export const PostCard = (props: any) => {
               variant="body2"
               sx={{ alignContent: 'center', fontSize: 12 }}
             >
-              Glb
+              {summaryWordCount}
             </Typography>
           </Stack>
 
@@ -140,7 +166,7 @@ export const PostCard = (props: any) => {
               variant="body2"
               sx={{ fontSize: 10, ml: -2.6 }}
             >
-              Glb
+              {commentDataCount?.commentCount || 0}
             </Typography>
           </Stack>
         </Stack>
@@ -168,12 +194,7 @@ export const PostCard = (props: any) => {
             WebkitLineClamp: 3,
           }}
         >
-          The people likely celebrated the new vear at this time
-          because the flood signalled a new and promising beginning as
-          farmlands would be fertile for the vear to The people likely
-          celebrated the new vear at this time because the flood
-          signalled a new and promising beginning as farmlands would
-          be fertile for the vear to c..
+          {postData?.summary}
         </Typography>
 
         <Stack

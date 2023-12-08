@@ -9,14 +9,32 @@ import 'swiper/css/pagination';
 import 'swiper/css/navigation';
 import { Navigation } from 'swiper/modules';
 import { useState } from 'react';
+import { useGetPostsQuery } from '@/store/post';
 
 const HomePage = () => {
-  const [activeIndex, setActiveIndex] = useState(0);
-  const [totalSlides, setTotalSlides] = useState(7);
+  const {
+    data: { results } = {},
+    isLoading,
+    isError,
+  } = useGetPostsQuery({});
   const [perView, setPerView] = useState(1);
-  console.log(activeIndex + ' active');
-  const progress: number = activeIndex * (totalSlides * perView);
+  const [activeIndex, setActiveIndex] = useState(0);
+  const [totalSlides, setTotalSlides] = useState(
+    // results?.length ?? 0
+    4
+  );
+  // console.log(results?.length, 'totlss');
+  // console.log(activeIndex + ' active');
+  // console.log(totalSlides + ' total');
+
+  const progress: number =
+    ((activeIndex + 1) / (totalSlides - 1)) * 100 || 0;
   const _progress = Math.min(Math.max(0, progress), 100);
+
+  // console.log(progress + ' progress');
+  // console.log(_progress + ' _progress');
+
+  // console.log(results);
 
   return (
     <>
@@ -64,12 +82,13 @@ const HomePage = () => {
             }
           }}
         >
-          {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((item, index) => {
-            console.log(index); // Logs the index of the slide
+          {results?.map((item, index) => {
+            // console.log(index); // Logs the index of the slide
+            // console.log(item); // Logs the index of the slide
             return (
-              <SwiperSlide key={item}>
-                <Grid xs={12} sm={6} key={item}>
-                  <PostCard />
+              <SwiperSlide key={item.id}>
+                <Grid xs={12} sm={6} key={item.id}>
+                  <PostCard item={item} />
                 </Grid>
               </SwiperSlide>
             );

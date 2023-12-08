@@ -58,6 +58,7 @@ export const commentsApi = apiSlice.injectEndpoints({
             }
           } else {
             await setDoc(commentDocRef, {
+              postId: commentData[0].postId,
               id: commentDocRef.id,
               comments: [commentData],
             });
@@ -177,12 +178,43 @@ export const commentsApi = apiSlice.injectEndpoints({
       },
       invalidatesTags: ['Comment'],
     }),
+    getPostCommentsCount: builder.query({
+      async queryFn(params) {
+        try {
+          const commentsCollection = collection(db, COMMENTS_PATH);
+
+          const totalResultsQuery = query(
+            commentsCollection,
+            where('postId', '==', params.postId)
+          );
+          const totalResults = (
+            await getCountFromServer(totalResultsQuery)
+          ).data().count;
+
+          return {
+            data: {
+              commentCount: totalResults,
+            },
+          };
+        } catch (error: any) {
+          console.error('Failed to fetch posts:', error);
+          return {
+            error: {
+              status: 'API_ERROR',
+              message: error.message,
+            },
+          };
+        }
+      },
+      providesTags: ['Comment'],
+    }),
   }),
 });
 
 export const {
   useCreateCommentMutation,
   useGetCommentsQuery,
+  useGetPostCommentsCountQuery,
   useGetCommentQuery,
   useUpdateCommentMutation,
   useDeleteCommentMutation,
