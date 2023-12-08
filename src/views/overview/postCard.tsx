@@ -11,32 +11,45 @@ import ModeCommentOutlinedIcon from '@mui/icons-material/ModeCommentOutlined';
 import ReplyIcon from '@mui/icons-material/Reply';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import ThumbUpIcon from '@mui/icons-material/ThumbUpOutlined';
+import ThumbUpIconFilled from '@mui/icons-material/ThumbUp';
 import ThumbDownAltIcon from '@mui/icons-material/ThumbDownOutlined';
+import ThumbDownAltIconFilled from '@mui/icons-material/ThumbDown';
 import {
   Box,
+  Button,
   Card,
   CardContent,
   Stack,
   Typography,
 } from '@mui/material';
 import { useGetPostCommentsCountQuery } from '@/store/comment';
+import { useState } from 'react';
+import { useRouter } from 'next/router';
 
-export const PostCard = (props: any) => {
+export interface PostData {
+  id: string;
+  brandTo: string;
+  region: string;
+  tags: string;
+  headline: string;
+  summary: string;
+}
+
+export const PostCard = (props: { item: PostData }) => {
   const {
     data: commentDataCount,
     isLoading,
     isError,
-  } = useGetPostCommentsCountQuery({ postId: props.item.id });
+  } = useGetPostCommentsCountQuery({ postId: props.item?.id });
+  const router = useRouter();
 
-  console.log(commentDataCount, props.item.id);
-
-  let postData = null; // Initialize postData outside the conditional block
+  let postData: PostData | null = null;
 
   if (props.item) {
-    postData = props.item; // Assign props.item to postData if it exists
+    postData = props.item;
   }
   const countWords = (text: string): number => {
-    const words = text.split(/\s+/); // Split by whitespace
+    const words = text.split(/\s+/);
     return words.length;
   };
 
@@ -47,6 +60,31 @@ export const PostCard = (props: any) => {
   const summaryWordCountTime = summaryWordCount / 3.5 / 60;
   const roundedTime = summaryWordCountTime.toFixed(1);
 
+  const [isThumbUpClicked, setIsThumbUpClicked] = useState(false);
+  const [isThumbDownClicked, setIsThumbDownClicked] = useState(false);
+
+  const handleThumbUpClick = () => {
+    setIsThumbUpClicked(
+      (prevIsThumbUpClicked) => !prevIsThumbUpClicked
+    );
+    if (isThumbDownClicked) {
+      setIsThumbDownClicked(false);
+    }
+  };
+
+  const handleThumbDownClick = () => {
+    setIsThumbDownClicked(
+      (prevIsThumbDownClicked) => !prevIsThumbDownClicked
+    );
+    if (isThumbUpClicked) {
+      setIsThumbUpClicked(false);
+    }
+  };
+
+  const handleCardIdClick = () => {
+    console.log('handleCardIdClick');
+    router.push(`/blog/${postData?.id}`);
+  };
   return (
     <Card>
       <CardContent>
@@ -68,7 +106,7 @@ export const PostCard = (props: any) => {
               variant="body2"
               sx={{ alignContent: 'center', fontSize: 12 }}
             >
-              {postData.brandTo}
+              {postData?.brandTo}
             </Typography>
           </Stack>
           <Stack direction="row" alignItems="center" spacing={1}>
@@ -82,7 +120,7 @@ export const PostCard = (props: any) => {
               variant="body2"
               sx={{ alignContent: 'center', fontSize: 12 }}
             >
-              {postData.region}
+              {postData?.region}
             </Typography>
           </Stack>
 
@@ -90,10 +128,11 @@ export const PostCard = (props: any) => {
             variant="body2"
             sx={{ alignContent: 'center', fontSize: 12 }}
           >
-            {postData.tags}
+            {postData?.tags}
           </Typography>
         </Stack>
         <Typography
+          onClick={handleCardIdClick}
           variant="h3"
           sx={{
             fontSize: 25,
@@ -205,19 +244,41 @@ export const PostCard = (props: any) => {
             mt: 10,
           }}
         >
-          <ThumbUpIcon
-            sx={{
-              color: 'black',
-              fontSize: '28px',
-            }}
-          />
+          {isThumbUpClicked ? (
+            <ThumbUpIconFilled
+              onClick={handleThumbUpClick}
+              sx={{
+                color: 'black',
+                fontSize: '28px',
+              }}
+            />
+          ) : (
+            <ThumbUpIcon
+              onClick={handleThumbUpClick}
+              sx={{
+                color: 'black',
+                fontSize: '28px',
+              }}
+            />
+          )}
 
-          <ThumbDownAltIcon
-            sx={{
-              color: 'black',
-              fontSize: '28px',
-            }}
-          />
+          {isThumbDownClicked ? (
+            <ThumbDownAltIconFilled
+              onClick={handleThumbDownClick}
+              sx={{
+                color: 'black',
+                fontSize: '28px',
+              }}
+            />
+          ) : (
+            <ThumbDownAltIcon
+              onClick={handleThumbDownClick}
+              sx={{
+                color: 'black',
+                fontSize: '28px',
+              }}
+            />
+          )}
 
           <ReplyIcon
             sx={{

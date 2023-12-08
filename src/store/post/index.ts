@@ -114,9 +114,22 @@ export const postsApi = apiSlice.injectEndpoints({
     getPost: builder.query({
       async queryFn(id: any) {
         try {
-          const snapShot = await getDoc(doc(db, POSTS_PATH, id));
-          const data = snapShot.data();
-          return { data };
+          const postsCollection = collection(db, POSTS_PATH);
+          const postQuery = query(
+            postsCollection,
+            where('id', '==', id || '')
+          );
+          const resultsSnapshot = await getDocs(postQuery);
+          let postData: any;
+          resultsSnapshot.forEach((doc) => {
+            postData = doc.data();
+            postData.timestamp = postData.timestamp
+              .toDate()
+              .toISOString();
+          });
+          return {
+            data: postData,
+          };
         } catch (error: any) {
           return { error };
         }

@@ -12,8 +12,6 @@ import {
   updateDoc,
   getDoc,
   setDoc,
-  addDoc,
-  serverTimestamp,
   arrayUnion,
 } from 'firebase/firestore';
 import { apiSlice } from '../api';
