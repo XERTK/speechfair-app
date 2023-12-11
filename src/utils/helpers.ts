@@ -30,3 +30,16 @@ export const isString = (value: any) => {
 export const isNumber = (value: any) => {
   return typeof value === 'number' && isFinite(value);
 };
+
+// Check if a value is a number
+export const countWords = (text: string): number => {
+  const words = text.split(/\s+/);
+  return words.length;
+};
+
+export const summaryWordCountTime = (
+  summaryWordCount: number
+): string => {
+  const temp = (summaryWordCount / 3.5 / 60).toFixed(1);
+  return temp;
+};
