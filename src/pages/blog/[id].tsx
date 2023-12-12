@@ -21,7 +21,7 @@ type Anchor = 'top' | 'left' | 'bottom' | 'right';
 
 const blogPage = () => {
   const params = useParams<any>();
-  const loggedInUser = false;
+  const loggedInUser = true;
   const { data: postData } = useGetPostQuery<any>(params?.id);
   const {
     data: commentDataCount,
@@ -256,9 +256,12 @@ const blogPage = () => {
           alignItems="center"
           spacing={2}
         >
-          <Stack direction="row" alignItems="center">
+          <Stack
+            direction="row"
+            alignItems="center"
+            onClick={toggleDrawer(anchor, true)}
+          >
             <ModeCommentOutlinedIcon
-              onClick={toggleDrawer(anchor, true)}
               sx={{
                 color: 'black',
                 fontSize: '28px',
