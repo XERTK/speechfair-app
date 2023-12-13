@@ -18,7 +18,8 @@ import {
 } from 'firebase/firestore';
 import { apiSlice } from '../api';
 import db from '@/configs/firestore';
-import { COMMENTS_PATH, POSTS_PATH } from '@/configs/constants';
+import { COMMENTS_PATH } from '@/configs/constants';
+import { v4 as uuidv4 } from 'uuid'; // Import a library for generating UUIDs
 
 export const commentsApi = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
@@ -32,9 +33,11 @@ export const commentsApi = apiSlice.injectEndpoints({
             timestamp: Date.now(),
           };
 
-          const newDocRef = doc(commentsCollectionRef);
+          const newDocRef = doc(commentsCollectionRef); // Create a reference to a new document
+          console.log(newDocRef.id);
 
-          await setDoc(doc(commentsCollectionRef), {
+          await setDoc(newDocRef, {
+            // Use newDocRef here instead of doc(commentsCollectionRef)
             postId: commentData.postId,
             userId: commentData.userId,
             comments: [commentData],
@@ -48,6 +51,7 @@ export const commentsApi = apiSlice.injectEndpoints({
       },
       invalidatesTags: ['Comment'],
     }),
+
     getComments: builder.query({
       async queryFn(params) {
         try {
@@ -278,35 +282,258 @@ export const commentsApi = apiSlice.injectEndpoints({
       },
       providesTags: ['Comment'],
     }),
+    // createReply: builder.mutation({
+    //   async queryFn({ body }: any) {
+    //     try {
+    //       const { name, userId, commentId, reply } = body;
+
+    //       console.log(commentId);
+    //       const commentDocRef = doc(db, COMMENTS_PATH, commentId);
+    //       const commentDocSnapshot = await getDoc(commentDocRef);
+
+    //       if (commentDocSnapshot.exists()) {
+    //         const commentData = commentDocSnapshot.data();
+
+    //         const newReply = {
+    //           replyId: uuidv4(),
+    //           name,
+    //           userId,
+    //           text: reply,
+    //           reply: { replies: [] },
+    //           timestamp: Date.now(),
+    //         };
+    //         if (!commentData.replies) {
+    //           commentData.replies = [newReply];
+    //         } else {
+    //           commentData.replies.push(newReply);
+    //         }
+
+    //         await setDoc(commentDocRef, commentData);
+
+    //         return { data: { message: 'Reply added successfully' } };
+    //       } else {
+    //         console.error('Error: Comment not found');
+    //         return { error: 'Comment not found' };
+    //       }
+    //     } catch (error: any) {
+    //       console.log(error);
+    //       return { error };
+    //     }
+    //   },
+    //   invalidatesTags: ['Comment'],
+    // }),
+
+    // createReply: builder.mutation({
+    //   async queryFn({ body }: any) {
+    //     try {
+    //       const { name, userId, commentId, reply } = body;
+    //       const replyId = '723ad19e-4186-4500-9afd-9d489f85bffa';
+    //       const commentDocRef = doc(db, COMMENTS_PATH, commentId);
+    //       const commentDocSnapshot = await getDoc(commentDocRef);
+
+    //       if (commentDocSnapshot.exists()) {
+    //         const commentData = commentDocSnapshot.data();
+
+    //         // Check if replyId is provided in the body
+    //         if (replyId) {
+    //           // Search for a match in existing replies for the provided replyId
+    //           const replyToUpdate = commentData.replies?.find(
+    //             (replyItem: any) => replyItem.replyId === replyId
+    //           );
+
+    //           if (replyToUpdate) {
+    //             const newReply = {
+    //               replyId: uuidv4(),
+    //               name,
+    //               userId,
+    //               text: reply,
+    //               timestamp: Date.now(),
+    //             };
+
+    //             // Check if the replyToUpdate already has a replies array
+    //             if (!replyToUpdate.replies) {
+    //               replyToUpdate.replies = [newReply];
+    //             } else {
+    //               replyToUpdate.replies.push(newReply);
+    //             }
+
+    //             await setDoc(commentDocRef, commentData);
+
+    //             return {
+    //               data: { message: 'Reply added successfully' },
+    //             };
+    //           } else {
+    //             console.error('Error: Reply not found');
+    //             return { error: 'Reply not found' };
+    //           }
+    //         } else {
+    //           try {
+    //             // const { name, userId, commentId, reply } = body;
+
+    //             console.log(commentId);
+    //             const commentDocRef = doc(
+    //               db,
+    //               COMMENTS_PATH,
+    //               commentId
+    //             );
+    //             const commentDocSnapshot = await getDoc(
+    //               commentDocRef
+    //             );
+
+    //             if (commentDocSnapshot.exists()) {
+    //               const commentData = commentDocSnapshot.data();
+
+    //               const newReply = {
+    //                 replyId: uuidv4(),
+    //                 name,
+    //                 userId,
+    //                 text: reply,
+    //                 reply: { replies: [] },
+    //                 timestamp: Date.now(),
+    //               };
+    //               if (!commentData.replies) {
+    //                 commentData.replies = [newReply];
+    //               } else {
+    //                 commentData.replies.push(newReply);
+    //               }
+
+    //               await setDoc(commentDocRef, commentData);
+
+    //               return {
+    //                 data: { message: 'Reply added successfully' },
+    //               };
+    //             } else {
+    //               console.error('Error: Comment not found');
+    //               return { error: 'Comment not found' };
+    //             }
+    //           } catch (error: any) {
+    //             console.log(error);
+    //             return { error };
+    //           }
+
+    //           console.error('Error: replyId not provided');
+    //           return { error: 'replyId not provided' };
+    //         }
+    //       } else {
+    //         console.error('Error: Comment not found');
+    //         return { error: 'Comment not found' };
+    //       }
+    //     } catch (error: any) {
+    //       console.log(error);
+    //       return { error };
+    //     }
+    //   },
+    //   invalidatesTags: ['Comment'],
+    // }),
+
     createReply: builder.mutation({
       async queryFn({ body }: any) {
         try {
-          const commentsCollectionRef = collection(db, COMMENTS_PATH);
-
           const { name, userId, commentId, reply } = body;
-
-          const commentDocRef = doc(commentsCollectionRef, commentId);
+          const replyId = '0237524b-b742-4fce-bdc3-428132f2535a'; // Example replyId
+          const commentDocRef = doc(db, COMMENTS_PATH, commentId);
           const commentDocSnapshot = await getDoc(commentDocRef);
 
           if (commentDocSnapshot.exists()) {
-            const repliesCollectionRef = collection(
-              commentDocRef,
-              'replies'
-            );
+            const commentData = commentDocSnapshot.data();
 
-            // Add a new document to the replies subcollection
-            await addDoc(repliesCollectionRef, {
-              name,
-              userId,
-              reply,
-              timestamp: Date.now(),
-            });
+            const findAndAddReply = (
+              replies: any[],
+              parentId: string
+            ) => {
+              for (const replyItem of replies) {
+                if (replyItem.replyId === parentId) {
+                  const newReply = {
+                    replyId: uuidv4(),
+                    name,
+                    userId,
+                    text: reply,
+                    timestamp: Date.now(),
+                  };
 
-            return { data: { message: 'Reply added successfully' } };
+                  if (!replyItem.replies) {
+                    replyItem.replies = [newReply];
+                  } else {
+                    replyItem.replies.push(newReply);
+                  }
+
+                  return true; // Reply added successfully
+                } else if (replyItem.replies) {
+                  const found = findAndAddReply(
+                    replyItem.replies,
+                    parentId
+                  );
+                  if (found) return true; // Exit loop if reply is added
+                }
+              }
+              return false; // Reply not found
+            };
+
+            if (replyId) {
+              const added = findAndAddReply(
+                commentData.replies || [],
+                replyId
+              );
+
+              if (added) {
+                await setDoc(commentDocRef, commentData);
+                return {
+                  data: { message: 'Reply added successfully' },
+                };
+              } else {
+                console.error('Error: Reply not found');
+                return { error: 'Reply not found' };
+              }
+            } else {
+              try {
+                // const { name, userId, commentId, reply } = body;
+
+                console.log(commentId);
+                const commentDocRef = doc(
+                  db,
+                  COMMENTS_PATH,
+                  commentId
+                );
+                const commentDocSnapshot = await getDoc(
+                  commentDocRef
+                );
+
+                if (commentDocSnapshot.exists()) {
+                  const commentData = commentDocSnapshot.data();
+
+                  const newReply = {
+                    replyId: uuidv4(),
+                    name,
+                    userId,
+                    text: reply,
+                    timestamp: Date.now(),
+                  };
+                  if (!commentData.replies) {
+                    commentData.replies = [newReply];
+                  } else {
+                    commentData.replies.push(newReply);
+                  }
+
+                  await setDoc(commentDocRef, commentData);
+
+                  return {
+                    data: { message: 'Reply added successfully' },
+                  };
+                } else {
+                  console.error('Error: Comment not found');
+                  return { error: 'Comment not found' };
+                }
+              } catch (error: any) {
+                console.log(error);
+                return { error };
+              }
+            }
           } else {
+            console.error('Error: Comment not found');
             return { error: 'Comment not found' };
           }
         } catch (error: any) {
+          console.log(error);
           return { error };
         }
       },
