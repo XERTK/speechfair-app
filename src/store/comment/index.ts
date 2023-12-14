@@ -429,8 +429,9 @@ export const commentsApi = apiSlice.injectEndpoints({
     createReply: builder.mutation({
       async queryFn({ body }: any) {
         try {
-          const { name, userId, commentId, reply } = body;
-          const replyId = '0237524b-b742-4fce-bdc3-428132f2535a'; // Example replyId
+          const { name, userId, commentId, reply, replyId } = body;
+          console.log(reply.replyId, 'hello from the slice ');
+          // const replyId = '0237524b-b742-4fce-bdc3-428132f2535a'; // Example replyId
           const commentDocRef = doc(db, COMMENTS_PATH, commentId);
           const commentDocSnapshot = await getDoc(commentDocRef);
 

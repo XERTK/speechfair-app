@@ -2,12 +2,6 @@ import * as React from 'react';
 import Box from '@mui/material/Box';
 import SwipeableDrawer from '@mui/material/SwipeableDrawer';
 import Button from '@mui/material/Button';
-import List from '@mui/material/List';
-import Divider from '@mui/material/Divider';
-import ListItem from '@mui/material/ListItem';
-import ListItemButton from '@mui/material/ListItemButton';
-import ListItemIcon from '@mui/material/ListItemIcon';
-import StarRateIcon from '@mui/icons-material/StarRate';
 
 import {
   Avatar,
@@ -21,13 +15,16 @@ import {
   useGetPostCommentsCountQuery,
   useGetPostCommentsQuery,
 } from '@/store/comment';
-import CustomField from '../custom-field';
+
 import { toast } from 'react-toastify';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useForm } from 'react-hook-form';
 import * as yup from 'yup';
 import CloseIcon from '@mui/icons-material/Close';
 import { useAuth } from '@/hooks/use-auth';
+import CustomField from '@/components/custom-field';
+import { renderReplies } from './redenReplies';
+import { list } from './redenList';
 
 type Anchor = 'top' | 'left' | 'bottom' | 'right';
 type CommentDrawerProps = {
@@ -57,9 +54,13 @@ const CommentDrawer: React.FC<CommentDrawerProps> = (props) => {
   const [commentId, setCommentId] = React.useState<
     string | undefined
   >();
-
+  const [replyId, setReplyId] = React.useState<string | undefined>();
   const handleCommentIdUpdate = (id: string) => {
     setCommentId(id);
+  };
+  const handleReplyIdUpdate = (id: string) => {
+    console.log(replyId);
+    setReplyId(id);
   };
   const toggleReply = (commentId: string) => {
     setReplying((prevState) => ({
@@ -108,14 +109,37 @@ const CommentDrawer: React.FC<CommentDrawerProps> = (props) => {
       console.log(postId);
       console.log(user.id);
       console.log(commentId, 'commentID');
-      await createReply({
+      console.log(replyId, 'replyID');
+      const props = {
         body: {
           userId: user.id,
           name: user.firstName,
           commentId: commentId,
+          replyId,
           ...data,
         },
-      });
+      };
+      console.log(props, 'props');
+      await createReply(
+        replyId
+          ? {
+              body: {
+                userId: user.id,
+                name: user.firstName,
+                commentId: commentId,
+                replyId,
+                ...data,
+              },
+            }
+          : {
+              body: {
+                userId: user.id,
+                name: user.firstName,
+                commentId: commentId,
+                ...data,
+              },
+            }
+      );
       toast.success('Reply added');
     } catch (err: any) {
       console.log('error', err);
@@ -156,116 +180,6 @@ const CommentDrawer: React.FC<CommentDrawerProps> = (props) => {
       toast.error(err?.data?.message || err.error);
     }
   };
-
-  const list = (anchor: Anchor) => (
-    <Box
-      sx={{
-        width: '700px',
-        mx: 3,
-      }}
-      role="presentation"
-    >
-      <Typography
-        sx={{
-          alignContent: 'center',
-          fontSize: 20,
-        }}
-      >
-        {typeof commentDataCount === 'object'
-          ? commentDataCount.commentCount
-          : commentDataCount || 0}{' '}
-        Comments
-      </Typography>
-      <Divider />
-
-      {commentList?.results?.map((comment: any, index: any) => (
-        <React.Fragment key={comment.id}>
-          <ListItem disablePadding>
-            <ListItemIcon>
-              <Avatar
-                alt="not found"
-                // src="/static/images/avatar/1.jpg"
-              />
-            </ListItemIcon>
-            <Stack
-              direction="column"
-              alignItems="left"
-              spacing={1}
-              sx={{ p: 3 }}
-            >
-              <ListItemText primary={comment.Comment.comment} />
-              <Stack direction="row" alignItems="left" spacing={1}>
-                {!replying[comment.id] && (
-                  <Typography
-                    variant="body2"
-                    sx={{
-                      alignContent: 'center',
-                      fontSize: 12,
-                      cursor: 'pointer',
-                    }}
-                    onClick={() => toggleReply(comment.id)}
-                  >
-                    Reply
-                  </Typography>
-                )}
-                {replying[comment.id] && (
-                  <Typography
-                    variant="body2"
-                    sx={{
-                      alignContent: 'center',
-                      fontSize: 12,
-                      cursor: 'pointer',
-                    }}
-                    onClick={() => toggleReply(comment.id)}
-                  >
-                    close Reply
-                  </Typography>
-                )}
-
-                <StarRateIcon
-                  sx={{
-                    color: 'black',
-                    fontSize: '19px',
-                  }}
-                />
-              </Stack>
-            </Stack>
-          </ListItem>
-          {replying[comment.id] && (
-            <>
-              <Stack direction="row" alignItems="center" spacing={1}>
-                <Avatar
-                  alt="not found"
-                  // src="/static/images/avatar/1.jpg"
-                />
-                <form
-                  onSubmit={handleReplySubmit(onReplySubmit)}
-                  noValidate
-                >
-                  <CustomField
-                    variant="filled"
-                    name="reply"
-                    control={replyControl}
-                    error={replyErrors}
-                  />
-                  <Button
-                    size="large"
-                    sx={{ mb: 3 }}
-                    type="submit"
-                    onClick={() => handleCommentIdUpdate(comment.id)}
-                  >
-                    comment
-                  </Button>
-                </form>
-              </Stack>
-            </>
-          )}
-          {index !== commentList.results.length - 1 && <Divider />}{' '}
-          {/* Add a divider if it's not the last comment */}
-        </React.Fragment>
-      ))}
-    </Box>
-  );
 
   return (
     <SwipeableDrawer
@@ -334,7 +248,19 @@ const CommentDrawer: React.FC<CommentDrawerProps> = (props) => {
           </Button>
         )}
       </Box>
-      {list(anchor)}
+      {list(
+        anchor,
+        commentDataCount,
+        commentList,
+        replying,
+        toggleReply,
+        handleCommentIdUpdate, // Pass handleCommentIdUpdate
+        handleReplyIdUpdate, // Pass handleReplyIdUpdate
+        handleReplySubmit,
+        onReplySubmit,
+        replyControl,
+        replyErrors
+      )}
     </SwipeableDrawer>
   );
 };

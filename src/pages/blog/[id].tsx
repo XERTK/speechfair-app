@@ -15,7 +15,7 @@ import ReplyIcon from '@mui/icons-material/Reply';
 import BookmarkBorderOutlinedIcon from '@mui/icons-material/BookmarkBorderOutlined';
 import React from 'react';
 import { countWords, summaryWordCountTime } from '@/utils/helpers';
-import CommentDrawer from '@/components/drawer/commentDrawer';
+import CommentDrawer from '@/modules/commentDrawer';
 
 type Anchor = 'top' | 'left' | 'bottom' | 'right';
 
