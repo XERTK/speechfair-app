@@ -13,7 +13,7 @@ import { createContext, useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 
 const defaultProvider = {
-  user: undefined,
+  user: null as any,
   login: (params: any) => Promise.resolve(),
   logout: () => {},
 };
@@ -80,7 +80,7 @@ const AuthProvider = ({ children }: any) => {
   };
 
   const values = {
-    user,
+    user: user ?? null,
     register: handleRegister,
     login: handleLogin,
     logout: handleLogout,

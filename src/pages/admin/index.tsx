@@ -30,22 +30,6 @@ const Page = () => (
       <Container maxWidth="xl">
         <Grid container spacing={3}>
           <Grid xs={12} sm={6} lg={3}>
-            <PostCard
-              difference={12}
-              positive
-              sx={{ height: '100%' }}
-              value="$24k"
-            />
-          </Grid>
-          <Grid xs={12} sm={6} lg={3}>
-            <OverviewTotalCustomers
-              difference={16}
-              positive={false}
-              sx={{ height: '100%' }}
-              value="1.6k"
-            />
-          </Grid>
-          <Grid xs={12} sm={6} lg={3}>
             <OverviewTasksProgress
               sx={{ height: '100%' }}
               value={75.5}

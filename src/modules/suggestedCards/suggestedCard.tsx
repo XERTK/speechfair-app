@@ -25,6 +25,7 @@ import {
 import { useGetPostCommentsCountQuery } from '@/store/comment';
 import { useState } from 'react';
 import { useRouter } from 'next/router';
+import Image from 'next/image';
 
 export interface PostData {
   id: string;
@@ -102,7 +103,12 @@ export const SuggestedCard = (props: { item: PostData }) => {
           justifyContent="space-between"
           spacing={1}
         >
-          <img src={logoImg.src} alt="Logo" width={'37.61px'} />
+          <Image
+            src={logoImg.src}
+            alt="Logo"
+            width={38}
+            height={38}
+          />
           <Stack direction="row" alignItems="center" spacing={1}>
             <StarRateIcon
               sx={{

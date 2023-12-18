@@ -22,6 +22,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { toast } from 'react-toastify';
 import PhoneInput from 'react-phone-input-2';
 import 'react-phone-input-2/lib/style.css';
+import Image from 'next/image';
 
 const phoneInputStyle = {
   input: {
@@ -119,7 +120,7 @@ const Page = () => {
           }}
         >
           <Box>
-            <img src={logoImg.src} alt="Logo" width={'55.61px'} />
+            <Image src={logoImg} alt="Logo" width={55.61} />
           </Box>
           <Box>
             <Typography

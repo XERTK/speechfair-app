@@ -1,5 +1,6 @@
 export const USERS_PATH = `users`;
 export const POSTS_PATH = `posts`;
+export const BASE_URL = '';
 export const COMMENTS_PATH = `comments`;
 export const AUTH_URL = `http://localhost:3000/auth`;
 export const CONTENT_BRANDS = [

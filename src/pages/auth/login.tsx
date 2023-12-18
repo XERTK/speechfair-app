@@ -87,7 +87,7 @@ const LoginPage = () => {
                 Log In
               </Typography>
               <Typography color="text.secondary" variant="body2">
-                Don't have an account?{' '}
+                Don&apos;t have an account?{' '}
                 <NextLink href="/auth/register" passHref>
                   Register
                 </NextLink>

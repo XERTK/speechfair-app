@@ -7,9 +7,7 @@ import {
   Dialog,
   DialogActions,
   DialogContent,
-  DialogContentText,
   DialogTitle,
-  IconButton,
   Stack,
   SvgIcon,
   Typography,
@@ -64,54 +62,61 @@ const columns = [
   {
     field: 'history',
     headerName: 'History',
-    renderCell: (params: any) => {
-      const [open, setOpen] = React.useState(false);
-
-      const handleClickOpen = () => {
-        setOpen(true);
-      };
-
-      const handleClose = () => {
-        setOpen(false);
-      };
-
-      const commentsJSON = params.row.comments || [];
-
-      return (
-        <React.Fragment>
-          <Button variant="outlined" onClick={handleClickOpen}>
-            View
-          </Button>
-          <Dialog
-            open={open}
-            keepMounted
-            onClose={handleClose}
-            aria-describedby="alert-dialog-slide-description"
-          >
-            <DialogTitle>{'Your previous History'}</DialogTitle>
-            <DialogContent>
-              {commentsJSON.map((comment: any, index: number) => (
-                <div key={index}>
-                  <p>
-                    Date:{' '}
-                    {new Date(
-                      comment.timestamp.seconds * 1000
-                    ).toLocaleString()}
-                  </p>
-                  <p>Comment: {comment.comment}</p>
-                  {index < commentsJSON.length - 1 && <hr />}
-                </div>
-              ))}
-            </DialogContent>
-
-            <DialogActions>
-              <Button onClick={handleClose}>Close</Button>
-            </DialogActions>
-          </Dialog>
-        </React.Fragment>
-      );
-    },
+    renderCell: (params: any) => (
+      <RenderHistoryCell comments={params.row.comments} />
+    ),
   },
+  // {
+  //   field: 'history',
+  //   headerName: 'History',
+  //   renderCell: (params: any) => {
+  //     const [open, setOpen] = React.useState(false);
+
+  //     const handleClickOpen = () => {
+  //       setOpen(true);
+  //     };
+
+  //     const handleClose = () => {
+  //       setOpen(false);
+  //     };
+
+  //     const commentsJSON = params.row.comments || [];
+
+  //     return (
+  //       <React.Fragment>
+  //         <Button variant="outlined" onClick={handleClickOpen}>
+  //           View
+  //         </Button>
+  //         <Dialog
+  //           open={open}
+  //           keepMounted
+  //           onClose={handleClose}
+  //           aria-describedby="alert-dialog-slide-description"
+  //         >
+  //           <DialogTitle>{'Your previous History'}</DialogTitle>
+  //           <DialogContent>
+  //             {commentsJSON.map((comment: any, index: number) => (
+  //               <div key={index}>
+  //                 <p>
+  //                   Date:{' '}
+  //                   {new Date(
+  //                     comment.timestamp.seconds * 1000
+  //                   ).toLocaleString()}
+  //                 </p>
+  //                 <p>Comment: {comment.comment}</p>
+  //                 {index < commentsJSON.length - 1 && <hr />}
+  //               </div>
+  //             ))}
+  //           </DialogContent>
+
+  //           <DialogActions>
+  //             <Button onClick={handleClose}>Close</Button>
+  //           </DialogActions>
+  //         </Dialog>
+  //       </React.Fragment>
+  //     );
+  //   },
+  // },
   {
     field: 'upVotes',
     headerName: 'Up Votes',
@@ -128,8 +133,54 @@ const columns = [
   },
 ];
 
+const RenderHistoryCell = ({ comments }: { comments: any[] }) => {
+  const [open, setOpen] = React.useState(false);
+
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+  };
+  // const commentsJSON = params.row.comments || [];
+
+  return (
+    <React.Fragment>
+      <Button variant="outlined" onClick={handleClickOpen}>
+        View
+      </Button>
+      <Dialog
+        open={open}
+        keepMounted
+        onClose={handleClose}
+        aria-describedby="alert-dialog-slide-description"
+      >
+        <DialogTitle>{'Your previous History'}</DialogTitle>
+        <DialogContent>
+          {comments.map((comment: any, index: number) => (
+            <div key={index}>
+              <p>
+                Date:{' '}
+                {new Date(
+                  comment.timestamp.seconds * 1000
+                ).toLocaleString()}
+              </p>
+              <p>Comment: {comment.comment}</p>
+              {index < comments.length - 1 && <hr />}
+            </div>
+          ))}
+        </DialogContent>
+
+        <DialogActions>
+          <Button onClick={handleClose}>Close</Button>
+        </DialogActions>
+      </Dialog>
+    </React.Fragment>
+  );
+};
+
 const CommentsPage = () => {
-  const router = useRouter();
   const [query, setQuery] = useState({
     page: 0,
     limit: 5,

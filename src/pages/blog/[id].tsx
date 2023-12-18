@@ -17,11 +17,11 @@ import React from 'react';
 import { countWords, summaryWordCountTime } from '@/utils/helpers';
 import CommentDrawer from '@/modules/commentDrawer';
 import SuggestedCards from '@/modules/suggestedCards';
-import { color } from '@mui/system';
+import Image from 'next/image';
 
 type Anchor = 'top' | 'left' | 'bottom' | 'right';
 
-const blogPage = () => {
+const BlogPage = () => {
   const params = useParams<any>();
   const loggedInUser = true;
   const { data: postData } = useGetPostQuery<any>(params?.id);
@@ -93,7 +93,13 @@ const blogPage = () => {
           justifyContent="space-between"
           spacing={2}
         >
-          <img src={logoImg.src} alt="Logo" width={'37.61px'} />
+          <Image
+            src={logoImg.src}
+            alt="Logo"
+            width={38}
+            height={38}
+          />
+
           <Stack direction="row" alignItems="center" spacing={1}>
             <StarRateIcon
               sx={{
@@ -358,5 +364,5 @@ const blogPage = () => {
   );
 };
 
-blogPage.getLayout = (page: any) => <Layout>{page}</Layout>;
-export default blogPage;
+BlogPage.getLayout = (page: any) => <Layout>{page}</Layout>;
+export default BlogPage;
