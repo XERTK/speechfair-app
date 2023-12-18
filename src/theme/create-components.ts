@@ -60,7 +60,7 @@ export function createComponents(config: any) {
         root: {
           borderRadius: 20,
 
-          minWidth: 420,
+          // minWidth: 420,
 
           [`&.${paperClasses.elevation1}`]: {
             boxShadow: '0px 5px 22px rgba(0, 0, 0, 0.5)',

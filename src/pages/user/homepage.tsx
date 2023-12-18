@@ -7,9 +7,10 @@ import { Swiper, SwiperSlide } from 'swiper/react';
 import 'swiper/css';
 import 'swiper/css/pagination';
 import 'swiper/css/navigation';
-import { Navigation } from 'swiper/modules';
+import { Autoplay, Navigation } from 'swiper/modules';
 import { useState } from 'react';
 import { useGetPostsQuery } from '@/store/post';
+import { style } from '@mui/system';
 
 const HomePage = () => {
   const {
@@ -57,6 +58,10 @@ const HomePage = () => {
 
       <Grid>
         <Swiper
+          autoplay={{
+            delay: 2500,
+            disableOnInteraction: false,
+          }}
           style={{
             padding: '20px',
           }}
@@ -74,7 +79,7 @@ const HomePage = () => {
           }}
           spaceBetween={170}
           navigation={true}
-          modules={[Navigation]}
+          modules={[Navigation, Autoplay]}
           onRealIndexChange={(element) => {
             setActiveIndex(element.activeIndex);
             if (typeof element.params.slidesPerView === 'number') {

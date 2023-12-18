@@ -8,12 +8,12 @@ import LocationOnIcon from '@mui/icons-material/LocationOn';
 import AbcIcon from '@mui/icons-material/Abc';
 import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
 import ModeCommentOutlinedIcon from '@mui/icons-material/ModeCommentOutlined';
-import ReplyIcon from '@mui/icons-material/Reply';
-import MoreVertIcon from '@mui/icons-material/MoreVert';
+
 import ThumbUpIcon from '@mui/icons-material/ThumbUpOutlined';
 import ThumbUpIconFilled from '@mui/icons-material/ThumbUp';
 import ThumbDownAltIcon from '@mui/icons-material/ThumbDownOutlined';
 import ThumbDownAltIconFilled from '@mui/icons-material/ThumbDown';
+import ShareIcon from '@mui/icons-material/Share';
 import {
   Box,
   Button,
@@ -35,7 +35,7 @@ export interface PostData {
   summary: string;
 }
 
-export const PostCard = (props: { item: PostData }) => {
+export const SuggestedCard = (props: { item: PostData }) => {
   const {
     data: commentDataCount,
     isLoading,
@@ -88,7 +88,11 @@ export const PostCard = (props: { item: PostData }) => {
   return (
     <Card
       sx={{
-        minWidth: 420,
+        height: '450px',
+        borderRadius: 0,
+        border: '3px solid #000', // Adding a black border of 1px
+        minWidth: '200px',
+        maxWidth: '300px',
       }}
     >
       <CardContent>
@@ -96,7 +100,7 @@ export const PostCard = (props: { item: PostData }) => {
           alignItems="center"
           direction="row"
           justifyContent="space-between"
-          spacing={2}
+          spacing={1}
         >
           <img src={logoImg.src} alt="Logo" width={'37.61px'} />
           <Stack direction="row" alignItems="center" spacing={1}>
@@ -127,13 +131,6 @@ export const PostCard = (props: { item: PostData }) => {
               {postData?.region}
             </Typography>
           </Stack>
-
-          <Typography
-            variant="body2"
-            sx={{ alignContent: 'center', fontSize: 12 }}
-          >
-            {postData?.tags}
-          </Typography>
         </Stack>
         <Typography
           onClick={handleCardIdClick}
@@ -197,21 +194,6 @@ export const PostCard = (props: { item: PostData }) => {
               Glb
             </Typography>
           </Stack>
-
-          <Stack direction="row" alignItems="center">
-            <ModeCommentOutlinedIcon
-              sx={{
-                color: 'black',
-                fontSize: '28px',
-              }}
-            />
-            <Typography
-              variant="body2"
-              sx={{ fontSize: 10, ml: -2.6 }}
-            >
-              {commentDataCount?.commentCount || 0}
-            </Typography>
-          </Stack>
         </Stack>
 
         <Box
@@ -234,7 +216,7 @@ export const PostCard = (props: { item: PostData }) => {
             display: '-webkit-box',
             overflow: 'hidden',
             WebkitBoxOrient: 'vertical',
-            WebkitLineClamp: 3,
+            WebkitLineClamp: 2,
           }}
         >
           {postData?.summary}
@@ -243,11 +225,31 @@ export const PostCard = (props: { item: PostData }) => {
         <Stack
           direction="row"
           justifyContent="space-between"
-          spacing={8}
+          spacing={5}
           sx={{
-            mt: 10,
+            mt: 3,
           }}
         >
+          <ShareIcon
+            sx={{
+              color: 'black',
+              fontSize: '28px',
+            }}
+          />
+          <Stack direction="row" alignItems="center">
+            <ModeCommentOutlinedIcon
+              sx={{
+                color: 'black',
+                fontSize: '28px',
+              }}
+            />
+            <Typography
+              variant="body2"
+              sx={{ fontSize: 14, ml: -2.3 }}
+            >
+              {commentDataCount?.commentCount || 0}
+            </Typography>
+          </Stack>
           {isThumbUpClicked ? (
             <ThumbUpIconFilled
               onClick={handleThumbUpClick}
@@ -283,27 +285,13 @@ export const PostCard = (props: { item: PostData }) => {
               }}
             />
           )}
-
-          <ReplyIcon
-            sx={{
-              color: 'black',
-              fontSize: '28px',
-            }}
-          />
-
-          <MoreVertIcon
-            sx={{
-              color: 'black',
-              fontSize: '28px',
-            }}
-          />
         </Stack>
       </CardContent>
     </Card>
   );
 };
 
-PostCard.prototypes = {
+SuggestedCard.prototypes = {
   difference: PropTypes.number,
   positive: PropTypes.bool,
   sx: PropTypes.object,
