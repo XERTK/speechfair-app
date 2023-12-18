@@ -12,13 +12,7 @@ import router, { useRouter } from 'next/router';
 import { createContext, useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 
-const defaultProvider = {
-  user: null as any,
-  login: (params: any) => Promise.resolve(),
-  logout: () => {},
-};
-
-const AuthContext = createContext(defaultProvider);
+const AuthContext = createContext({});
 
 const AuthProvider = ({ children }: any) => {
   const router = useRouter();
