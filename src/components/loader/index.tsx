@@ -1,9 +1,10 @@
-// ** MUI Import
-import CircularProgress from '@mui/material/CircularProgress';
+import { Box, LinearProgress } from '@mui/material';
 
 const Loader = () => {
   return (
-    <CircularProgress disableShrink color="inherit" size="26px" />
+    <Box sx={{ width: '100%' }}>
+      <LinearProgress color="inherit" />
+    </Box>
   );
 };
 

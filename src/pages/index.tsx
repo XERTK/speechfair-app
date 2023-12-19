@@ -5,7 +5,6 @@ import {
   Container,
   Unstable_Grid2 as Grid,
 } from '@mui/material';
-import { PostCard } from '@/views/overview/postCard';
 import { OverviewTotalCustomers } from '@/views/overview/overview-total-customers';
 import { OverviewTasksProgress } from '@/views/overview/overview-tasks-progress';
 import { OverviewTotalProfit } from '@/views/overview/overview-total-profit';
@@ -18,7 +17,7 @@ const now = new Date();
 const Page = () => (
   <>
     <Head>
-      <title>Overview | Fcorner Admin</title>
+      <title>Libersquare | admin | dashboard</title>
     </Head>
     <Box
       component="main"

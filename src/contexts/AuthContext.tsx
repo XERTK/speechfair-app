@@ -1,3 +1,4 @@
+import Loader from '@/components/loader';
 import { auth } from '@/configs/firebase';
 import db from '@/configs/firestore';
 import { useGetMeQuery } from '@/store/auth';
@@ -17,7 +18,7 @@ const AuthContext = createContext({});
 const AuthProvider = ({ children }: any) => {
   const router = useRouter();
 
-  const { data: user } = useGetMeQuery(
+  const { data: user, isLoading } = useGetMeQuery(
     {},
     {
       skip:
@@ -25,6 +26,15 @@ const AuthProvider = ({ children }: any) => {
         !localStorage.getItem('user'),
     }
   );
+
+  // Check if user data is loading
+  if (isLoading) {
+    return (
+      <div>
+        <Loader />
+      </div>
+    ); // Show a loader or placeholder while fetching user data
+  }
 
   const handleRegister = async (params: any) => {
     try {
@@ -62,8 +72,10 @@ const AuthProvider = ({ children }: any) => {
           params.password
         );
       localStorage.setItem('user', JSON.stringify(authUser));
+      console.log(localStorage.getItem('user'), 'success FROM LOGIN');
     } catch (err: any) {
-      toast.error(err);
+      console.error('Login error:', err);
+      toast.error('Login failed. Please check your credentials.');
     }
   };
 
