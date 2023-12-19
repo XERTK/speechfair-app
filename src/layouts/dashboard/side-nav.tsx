@@ -1,6 +1,8 @@
 import NextLink from 'next/link';
 import { usePathname } from 'next/navigation';
 import PropTypes from 'prop-types';
+import React from 'react';
+
 import {
   Box,
   Divider,
@@ -71,21 +73,46 @@ export const SideNav = (props: any) => {
             }}
           >
             {items.map((item: any) => {
-              const active = item.path
-                ? pathname === item.path
-                : false;
-
-              return (
-                <SideNavItem
-                  active={active}
-                  disabled={item.disabled}
-                  external={item.external}
-                  icon={item.icon}
-                  key={item.title}
-                  path={item.path}
-                  title={item.title}
-                />
-              );
+              if (item.subItems) {
+                // Render dropdown menu and its sub-items
+                return (
+                  <React.Fragment key={item.title}>
+                    {/* Render Dropdown Item */}
+                    <SideNavItem
+                      title={item.title}
+                      icon={item.icon}
+                      disabled={item.disabled}
+                      external={item.external}
+                    />
+                    {/* Render Sub-items */}
+                    {item.subItems.map((subItem: any) => (
+                      <SideNavItem
+                        key={subItem.title}
+                        title={subItem.title}
+                        path={subItem.path}
+                        disabled={subItem.disabled}
+                        external={subItem.external}
+                      />
+                    ))}
+                  </React.Fragment>
+                );
+              } else {
+                // Render regular item
+                const active = item.path
+                  ? pathname === item.path
+                  : false;
+                return (
+                  <SideNavItem
+                    key={item.title}
+                    active={active}
+                    disabled={item.disabled}
+                    external={item.external}
+                    icon={item.icon}
+                    path={item.path}
+                    title={item.title}
+                  />
+                );
+              }
             })}
           </Stack>
         </Box>
