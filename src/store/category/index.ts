@@ -36,7 +36,7 @@ export const categorysApi = apiSlice.injectEndpoints({
       },
       invalidatesTags: ['Post'],
     }),
-    getCategorys: builder.query({
+    getCategories: builder.query({
       async queryFn(params) {
         try {
           const categorysCollection = collection(db, CATEGORY_PATH);
@@ -127,7 +127,7 @@ export const categorysApi = apiSlice.injectEndpoints({
 
 export const {
   useUpdateCategoryMutation,
-  useGetCategorysQuery,
+  useGetCategoriesQuery,
   useGetCategoryQuery,
   useDeleteCategoryMutation,
   useCreateCategoryMutation,

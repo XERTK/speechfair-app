@@ -24,18 +24,10 @@ const HomePage = () => {
     // results?.length ?? 0
     4
   );
-  // console.log(results?.length, 'totlss');
-  // console.log(activeIndex + ' active');
-  // console.log(totalSlides + ' total');
 
   const progress: number =
     ((activeIndex + 1) / (totalSlides - 1)) * 100 || 0;
   const _progress = Math.min(Math.max(0, progress), 100);
-
-  // console.log(progress + ' progress');
-  // console.log(_progress + ' _progress');
-
-  // console.log(results);
 
   return (
     <>

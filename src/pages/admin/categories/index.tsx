@@ -14,7 +14,7 @@ import { useRouter } from 'next/router';
 import NextLink from 'next/link';
 import {
   useDeleteCategoryMutation,
-  useGetCategorysQuery,
+  useGetCategoriesQuery,
 } from '@/store/category';
 
 const columns = [
@@ -41,7 +41,7 @@ const CategorysPage = () => {
     limit: 5,
   });
 
-  const { data } = useGetCategorysQuery<any>(query);
+  const { data } = useGetCategoriesQuery<any>(query);
   const [deleteCategory] = useDeleteCategoryMutation();
 
   console.log('data for the reult', data);

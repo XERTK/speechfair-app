@@ -16,16 +16,6 @@ export const platform = {
   twitter: 'TWITTER',
   x: 'X',
 };
-export const CONTENT_BRANDS = [
-  { label: 'Select', value: 'N/A' },
-  { label: 'LB Original', value: 'LB Original' },
-  { label: 'Explainer', value: 'Explainer' },
-  {
-    label: 'Your World According To You',
-    value: 'Your World According To You',
-  },
-  { label: 'LB and Friends', value: 'LB and Friends' },
-];
 
 export const BRAND_ACCESS = [
   { label: 'Full Reel', value: 'fullReel' },
@@ -34,26 +24,4 @@ export const BRAND_ACCESS = [
     label: 'Direct Message',
     value: 'directMessage',
   },
-];
-
-export const CONTENT_REGIONS = [
-  { label: 'Select', value: 'N/A' },
-  { label: 'United States', value: 'United States' },
-  { label: 'Russia Ukraine War', value: 'Russia Ukraine War' },
-  {
-    label: 'The Tramp',
-    value: 'The Tramp',
-  },
-  { label: 'Your world', value: 'Your world' },
-];
-
-export const CONTENT_CATEGORY = [
-  { label: 'Select', value: 'N/A' },
-  { label: 'United States', value: 'United States' },
-  { label: 'Russia Ukraine War', value: 'Russia Ukraine War' },
-  {
-    label: 'The Tramp',
-    value: 'The Tramp',
-  },
-  { label: 'Your world', value: 'Your world' },
 ];

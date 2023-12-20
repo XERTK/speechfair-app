@@ -11,6 +11,7 @@ import {
   deleteDoc,
   setDoc,
   updateDoc,
+  getCountFromServer,
 } from 'firebase/firestore';
 import { apiSlice } from '../api';
 import db from '@/configs/firestore';
@@ -53,23 +54,26 @@ export const brandsApi = apiSlice.injectEndpoints({
           );
 
           const resultsSnapshot = await getDocs(brandQuery);
+          const results = resultsSnapshot.docs.map((brandDoc) => ({
+            id: brandDoc.id,
+            ...brandDoc.data(),
+          }));
 
-          const results = resultsSnapshot.docs.map((brandDoc) => {
-            const brandData = brandDoc.data();
-            const id = brandDoc.id; // Retrieve the Firestore document ID
-
-            return {
-              ...brandData,
-              id,
-            };
-          });
+          const totalResultsQuery = query(
+            brandsCollection,
+            where('id', '>=', params.search || '')
+          );
+          const totalResults = (
+            await getCountFromServer(totalResultsQuery)
+          ).data().count;
 
           const lastVisible =
             results.length > 0 ? results[results.length - 1].id : '';
 
           return {
             data: {
-              results: results,
+              results,
+              totalResults,
               lastVisible,
             },
           };
