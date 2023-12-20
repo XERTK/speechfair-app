@@ -18,6 +18,8 @@ export const apiSlice = createApi({
     'Feedback',
     'Region',
     'Category',
+    'Brand',
+    'Share',
   ],
   endpoints: (builder) => ({}),
 });

@@ -9,6 +9,7 @@ import BookmarkIcon from '@mui/icons-material/Bookmark';
 import { GridMoreVertIcon } from '@mui/x-data-grid';
 import ErrorIcon from '@mui/icons-material/Error';
 import FolderIcon from '@mui/icons-material/Folder';
+import ShareIcon from '@mui/icons-material/Share';
 
 export const items = [
   {
@@ -99,6 +100,10 @@ export const items = [
         title: 'Category',
         path: '/admin/categories',
       },
+      {
+        title: 'Brands',
+        path: '/admin/brands',
+      },
       // Add more sub-items here as needed
     ],
   },
@@ -108,6 +113,15 @@ export const items = [
     icon: (
       <SvgIcon fontSize="small">
         <ErrorIcon />
+      </SvgIcon>
+    ),
+  },
+  {
+    title: 'Share',
+    path: '/admin/shares',
+    icon: (
+      <SvgIcon fontSize="small">
+        <ShareIcon />
       </SvgIcon>
     ),
   },

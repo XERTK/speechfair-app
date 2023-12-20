@@ -8,7 +8,14 @@ export const BOOKMARK_PATH = `bookmarks`;
 export const FEEDBACK_PATH = `feedbacks`;
 export const REGION_PATH = `regions`;
 export const CATEGORY_PATH = `categories`;
+export const BRAND_PATH = `brands`;
+export const SHARE_PATH = `shares`;
 export const AUTH_URL = `http://localhost:3000/auth`;
+export const platform = {
+  facebook: 'FACEBOOK',
+  twitter: 'TWITTER',
+  x: 'X',
+};
 export const CONTENT_BRANDS = [
   { label: 'Select', value: 'N/A' },
   { label: 'LB Original', value: 'LB Original' },
@@ -19,6 +26,16 @@ export const CONTENT_BRANDS = [
   },
   { label: 'LB and Friends', value: 'LB and Friends' },
 ];
+
+export const BRAND_ACCESS = [
+  { label: 'Full Reel', value: 'fullReel' },
+  { label: 'Motion Story', value: 'motionStory' },
+  {
+    label: 'Direct Message',
+    value: 'directMessage',
+  },
+];
+
 export const CONTENT_REGIONS = [
   { label: 'Select', value: 'N/A' },
   { label: 'United States', value: 'United States' },
