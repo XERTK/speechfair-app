@@ -11,6 +11,8 @@ import { OverviewTotalProfit } from '@/views/overview/overview-total-profit';
 import { OverviewSales } from '@/views/overview/overview-sales';
 import { OverviewLatestProducts } from '@/views/overview/overview-latest-products';
 import { DashboardLayout } from '@/layouts/dashboard/layout';
+import HomePage from './user/homepage';
+import { Layout } from '@/layouts/user/layout';
 
 const now = new Date();
 
@@ -19,7 +21,8 @@ const Page = () => (
     <Head>
       <title>Libersquare | admin | dashboard</title>
     </Head>
-    <Box
+    <HomePage />
+    {/* <Box
       component="main"
       sx={{
         flexGrow: 1,
@@ -103,12 +106,10 @@ const Page = () => (
           </Grid>
         </Grid>
       </Container>
-    </Box>
+    </Box> */}
   </>
 );
 
-Page.getLayout = (page: any) => (
-  <DashboardLayout>{page}</DashboardLayout>
-);
+Page.getLayout = (page: any) => <Layout>{page}</Layout>;
 
 export default Page;

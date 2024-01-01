@@ -72,11 +72,11 @@ export const postsApi = apiSlice.injectEndpoints({
             ...pagination
           );
 
-          if (params.category) {
+          if (params.categoryName) {
             postQuery = query(
               postsCollection,
               orderBy('category'),
-              where('category', '==', params.category || ''),
+              where('category.name', '==', params.categoryName || ''),
               limit(params.limit),
               ...pagination
             );

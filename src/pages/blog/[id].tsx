@@ -111,7 +111,7 @@ const BlogPage = () => {
               variant="body2"
               sx={{ alignContent: 'center', fontSize: 16 }}
             >
-              {postData?.brandTo}
+              {postData?.brand.alias}
             </Typography>
           </Stack>
           <Stack direction="row" alignItems="center" spacing={1}>
@@ -125,7 +125,7 @@ const BlogPage = () => {
               variant="body2"
               sx={{ alignContent: 'center', fontSize: 16 }}
             >
-              {postData?.region}
+              {postData?.region.alias}
             </Typography>
           </Stack>
 

@@ -29,8 +29,8 @@ import Image from 'next/image';
 
 export interface PostData {
   id: string;
-  brandTo: string;
-  region: string;
+  brand: { alias: string };
+  region: { alias: string };
   tags: string;
   headline: string;
   summary: string;
@@ -49,8 +49,8 @@ export const SuggestedCard = (props: { item: PostData }) => {
   if (props.item) {
     postData = props.item;
   }
-  const countWords = (text: string): number => {
-    const words = text.split(/\s+/);
+  const countWords = (text: string | undefined): number => {
+    const words = text?.split(/\s+/) ?? [];
     return words.length;
   };
 
@@ -120,7 +120,7 @@ export const SuggestedCard = (props: { item: PostData }) => {
               variant="body2"
               sx={{ alignContent: 'center', fontSize: 12 }}
             >
-              {postData?.brandTo}
+              {postData?.brand?.alias}
             </Typography>
           </Stack>
           <Stack direction="row" alignItems="center" spacing={1}>
@@ -134,7 +134,7 @@ export const SuggestedCard = (props: { item: PostData }) => {
               variant="body2"
               sx={{ alignContent: 'center', fontSize: 12 }}
             >
-              {postData?.region}
+              {postData?.region.alias}
             </Typography>
           </Stack>
         </Stack>

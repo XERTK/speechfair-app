@@ -51,7 +51,7 @@ const HomePage = () => {
       <Grid>
         <Swiper
           autoplay={{
-            delay: 2500,
+            delay: 22500,
             disableOnInteraction: false,
           }}
           style={{
@@ -80,8 +80,6 @@ const HomePage = () => {
           }}
         >
           {results?.map((item, index) => {
-            // console.log(index); // Logs the index of the slide
-            // console.log(item); // Logs the index of the slide
             return (
               <SwiperSlide key={item.id}>
                 <Grid xs={12} sm={6} key={item.id}>

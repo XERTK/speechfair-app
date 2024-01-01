@@ -41,7 +41,7 @@ const columns = [
     flex: 1,
     headerName: 'region',
     renderCell: (params: any) => {
-      return params.row.region;
+      return params.row.region.name;
     },
   },
   {
@@ -49,7 +49,7 @@ const columns = [
     flex: 1,
     headerName: 'brand',
     renderCell: (params: any) => {
-      return params.row.brand;
+      return params.row.brand?.name;
     },
   },
   {
@@ -68,16 +68,13 @@ const columns = [
       return params.row.matrix;
     },
   },
+
   {
     field: 'category',
     flex: 1,
     headerName: 'category',
-    valueGetter: (params: any) => {
-      // const { data: categoryData } = useGetCategoryQuery<any>({
-      //   id: params.row.category,
-      // });
-
-      return params.row.category;
+    renderCell: (params: any) => {
+      return params.row.category.name;
     },
   },
 ];
@@ -129,6 +126,7 @@ const PostsPage = () => {
             query={query}
             setQuery={setQuery}
             lastVisible={data?.lastVisible}
+            isActions={true}
             onEdit={(id: any) => {
               router.replace(`/admin/posts/${id}`);
             }}
