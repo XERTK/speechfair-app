@@ -67,19 +67,38 @@ const PostForm: React.FC<{ post: any }> = ({ post }) => {
 
   const onSubmit: SubmitHandler<FormData> = async (data) => {
     try {
+      const brandObject = brandsData?.results.find(
+        (brand: any) => brand.alias === data.brand
+      );
+      const regionObject = regionsData?.results.find(
+        (region: any) => region.alias === data.region
+      );
+      const categoryObject = categoriesData?.results.find(
+        (category: any) => category.id === data.category
+      );
+
       if (post) {
         await updatePost({
           id: post.id,
-          body: data,
+          body: {
+            ...data,
+            brand: brandObject,
+            region: regionObject,
+            category: categoryObject,
+          },
         });
       } else {
         await createPost({
           body: {
             userId: user.id,
             ...data,
+            brand: brandObject,
+            region: regionObject,
+            category: categoryObject,
           },
         });
       }
+
       toast.success('Post updated');
       router.replace(`/admin/posts`);
     } catch (error: any) {
@@ -101,7 +120,9 @@ const PostForm: React.FC<{ post: any }> = ({ post }) => {
       label: category.name,
       value: category.id,
     })) || [];
-  console.log(categoryAccess, 'hello'); // This will give you an array of objects with 'name' and 'value' properties
+
+  console.log(categoryAccess, 'hello');
+
   return (
     <form onSubmit={handleSubmit(onSubmit)} noValidate>
       <Grid sx={{ mt: 4 }} container spacing={1} direction="column">
