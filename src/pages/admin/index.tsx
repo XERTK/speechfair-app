@@ -5,11 +5,13 @@ import {
   Container,
   Unstable_Grid2 as Grid,
 } from '@mui/material';
-import { OverviewTasksProgress } from '@/views/overview/overview-tasks-progress';
+
 import { OverviewTotalProfit } from '@/views/overview/overview-total-profit';
 import { OverviewSales } from '@/views/overview/overview-sales';
 import { OverviewLatestProducts } from '@/views/overview/overview-latest-products';
 import { DashboardLayout } from '@/layouts/dashboard/layout';
+import { DashboardUserCard } from '@/modules/dashboardUserCard';
+import { DashboardUserCommulativeCard } from '@/modules/dashboardUserCommulativeCard ';
 
 const now = new Date();
 
@@ -28,9 +30,12 @@ const Page = () => (
       <Container maxWidth="xl">
         <Grid container spacing={3}>
           <Grid xs={12} sm={6} lg={3}>
-            <OverviewTasksProgress
+            <DashboardUserCard sx={{ height: '100%' }} value={2} />
+          </Grid>
+          <Grid xs={12} sm={6} lg={3}>
+            <DashboardUserCommulativeCard
               sx={{ height: '100%' }}
-              value={75.5}
+              value={2}
             />
           </Grid>
           <Grid xs={12} sm={6} lg={3}>
@@ -39,7 +44,7 @@ const Page = () => (
               value="$15k"
             />
           </Grid>
-          <Grid xs={12} lg={8}>
+          {/* <Grid xs={12} lg={8}>
             <OverviewSales
               chartSeries={[
                 {
@@ -91,7 +96,7 @@ const Page = () => (
               ]}
               sx={{ height: '100%' }}
             />
-          </Grid>
+          </Grid> */}
         </Grid>
       </Container>
     </Box>

@@ -1,5 +1,6 @@
 import PropTypes from 'prop-types';
 import ListBulletIcon from '@heroicons/react/24/solid/ListBulletIcon';
+import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import {
   Avatar,
   Box,
@@ -11,7 +12,7 @@ import {
   Typography,
 } from '@mui/material';
 
-export const OverviewTasksProgress = (props: any) => {
+export const DashboardUserCard = (props: any) => {
   const { value, sx } = props;
 
   return (
@@ -29,9 +30,9 @@ export const OverviewTasksProgress = (props: any) => {
               gutterBottom
               variant="overline"
             >
-              Task Progress
+              User Now
             </Typography>
-            <Typography variant="h4">{value}%</Typography>
+            <Typography variant="h4">{value}</Typography>
           </Stack>
           <Avatar
             sx={{
@@ -41,19 +42,16 @@ export const OverviewTasksProgress = (props: any) => {
             }}
           >
             <SvgIcon>
-              <ListBulletIcon />
+              <AccountCircleIcon />
             </SvgIcon>
           </Avatar>
         </Stack>
-        <Box sx={{ mt: 3 }}>
-          <LinearProgress value={value} variant="determinate" />
-        </Box>
       </CardContent>
     </Card>
   );
 };
 
-OverviewTasksProgress.propTypes = {
+DashboardUserCard.propTypes = {
   value: PropTypes.number.isRequired,
   sx: PropTypes.object,
 };
