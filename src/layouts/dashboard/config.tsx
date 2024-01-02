@@ -6,10 +6,10 @@ import ThumbUpIcon from '@mui/icons-material/ThumbUp';
 import ThumbDownAltIcon from '@mui/icons-material/ThumbDownAlt';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import BookmarkIcon from '@mui/icons-material/Bookmark';
-import { GridMoreVertIcon } from '@mui/x-data-grid';
 import ErrorIcon from '@mui/icons-material/Error';
 import FolderIcon from '@mui/icons-material/Folder';
 import ShareIcon from '@mui/icons-material/Share';
+import ShoppingBagIcon from '@mui/icons-material/ShoppingBag';
 
 export const items = [
   {
@@ -17,7 +17,7 @@ export const items = [
     path: '/admin',
     icon: (
       <SvgIcon fontSize="small">
-        <UsersIcon />
+        <ShoppingBagIcon />
       </SvgIcon>
     ),
   },

@@ -1,16 +1,17 @@
 import PropTypes from 'prop-types';
-import EqualizerIcon from '@mui/icons-material/Equalizer';
-
+import ShoppingBagIcon from '@mui/icons-material/ShoppingBag';
 import {
   Avatar,
+  Box,
   Card,
   CardContent,
+  LinearProgress,
   Stack,
   SvgIcon,
   Typography,
 } from '@mui/material';
 
-export const DashboardUserCommulativeCard = (props: any) => {
+export const DashboardAdminNow = (props: any) => {
   const { sx } = props;
 
   return (
@@ -28,9 +29,9 @@ export const DashboardUserCommulativeCard = (props: any) => {
               gutterBottom
               variant="overline"
             >
-              Users Cummulative
+              Admin Now / Cummulative
             </Typography>
-            <Typography variant="h4"> 2 </Typography>
+            <Typography variant="h4">1 / 7</Typography>
           </Stack>
           <Avatar
             sx={{
@@ -40,7 +41,7 @@ export const DashboardUserCommulativeCard = (props: any) => {
             }}
           >
             <SvgIcon>
-              <EqualizerIcon />
+              <ShoppingBagIcon />
             </SvgIcon>
           </Avatar>
         </Stack>
@@ -49,6 +50,6 @@ export const DashboardUserCommulativeCard = (props: any) => {
   );
 };
 
-DashboardUserCommulativeCard.propTypes = {
+DashboardAdminNow.propTypes = {
   sx: PropTypes.object,
 };

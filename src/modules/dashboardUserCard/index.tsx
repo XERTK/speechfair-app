@@ -13,7 +13,7 @@ import {
 } from '@mui/material';
 
 export const DashboardUserCard = (props: any) => {
-  const { value, sx } = props;
+  const { sx } = props;
 
   return (
     <Card sx={sx}>
@@ -32,7 +32,7 @@ export const DashboardUserCard = (props: any) => {
             >
               User Now
             </Typography>
-            <Typography variant="h4">{value}</Typography>
+            <Typography variant="h4">3</Typography>
           </Stack>
           <Avatar
             sx={{
