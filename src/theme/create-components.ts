@@ -16,9 +16,11 @@ export function createComponents(config: any) {
     MuiAvatar: {
       styleOverrides: {
         root: {
-          fontSize: 14,
-          fontWeight: 600,
-          letterSpacing: 0,
+          width: 40,
+          height: 40,
+          fontSize: 18,
+          fontWeight: 700,
+          // Adjust other properties as necessary...
         },
       },
     },
@@ -26,8 +28,8 @@ export function createComponents(config: any) {
     MuiButton: {
       styleOverrides: {
         root: {
-          borderRadius: '12px',
-          textTransform: 'none',
+          borderRadius: 12,
+          textTransform: 'none', // or 'uppercase' based on your design
           color: 'black',
           backgroundColor: '#fbd603',
           '&:hover': {
@@ -60,7 +62,7 @@ export function createComponents(config: any) {
         root: {
           borderRadius: 20,
 
-          minWidth: 420,
+          // minWidth: 420,
 
           [`&.${paperClasses.elevation1}`]: {
             boxShadow: '0px 5px 22px rgba(0, 0, 0, 0.5)',

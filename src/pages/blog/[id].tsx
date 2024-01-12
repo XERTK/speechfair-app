@@ -16,10 +16,12 @@ import BookmarkBorderOutlinedIcon from '@mui/icons-material/BookmarkBorderOutlin
 import React from 'react';
 import { countWords, summaryWordCountTime } from '@/utils/helpers';
 import CommentDrawer from '@/modules/commentDrawer';
+import SuggestedCards from '@/modules/suggestedCards';
+import Image from 'next/image';
 
 type Anchor = 'top' | 'left' | 'bottom' | 'right';
 
-const blogPage = () => {
+const BlogPage = () => {
   const params = useParams<any>();
   const loggedInUser = true;
   const { data: postData } = useGetPostQuery<any>(params?.id);
@@ -91,7 +93,13 @@ const blogPage = () => {
           justifyContent="space-between"
           spacing={2}
         >
-          <img src={logoImg.src} alt="Logo" width={'37.61px'} />
+          <Image
+            src={logoImg.src}
+            alt="Logo"
+            width={38}
+            height={38}
+          />
+
           <Stack direction="row" alignItems="center" spacing={1}>
             <StarRateIcon
               sx={{
@@ -103,7 +111,7 @@ const blogPage = () => {
               variant="body2"
               sx={{ alignContent: 'center', fontSize: 16 }}
             >
-              {postData?.brandTo}
+              {postData?.brand.alias}
             </Typography>
           </Stack>
           <Stack direction="row" alignItems="center" spacing={1}>
@@ -117,7 +125,7 @@ const blogPage = () => {
               variant="body2"
               sx={{ alignContent: 'center', fontSize: 16 }}
             >
-              {postData?.region}
+              {postData?.region.alias}
             </Typography>
           </Stack>
 
@@ -323,10 +331,38 @@ const blogPage = () => {
         loggedInUser={loggedInUser}
         postId={params?.id}
       />
+      <Typography
+        variant="body2"
+        sx={{
+          mt: 7,
+          mb: 2,
+          mx: 3,
+          width: '115px',
+          fontWeight: 'bold',
+
+          color: '#000000',
+          fontSize: 16,
+          display: 'flex',
+          borderBottom: '0.1rem solid #ffd600',
+        }}
+      >
+        Suggested Cards
+      </Typography>
+
+      <Grid
+        maxWidth="xl"
+        justifyContent="center"
+        sx={{
+          mx: 3,
+          padding: '20px', // Adding padding for better visibility
+        }}
+        id="grid3"
+      >
+        <SuggestedCards category={postData?.category} />
+      </Grid>
     </>
   );
 };
 
-blogPage.getLayout = (page: any) => <Layout>{page}</Layout>;
-
-export default blogPage;
+BlogPage.getLayout = (page: any) => <Layout>{page}</Layout>;
+export default BlogPage;

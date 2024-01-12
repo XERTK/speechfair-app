@@ -3,12 +3,7 @@ import Box from '@mui/material/Box';
 import SwipeableDrawer from '@mui/material/SwipeableDrawer';
 import Button from '@mui/material/Button';
 
-import {
-  Avatar,
-  ListItemText,
-  Stack,
-  Typography,
-} from '@mui/material';
+import { Typography } from '@mui/material';
 import {
   useCreateCommentMutation,
   useCreateReplyMutation,
@@ -23,7 +18,6 @@ import * as yup from 'yup';
 import CloseIcon from '@mui/icons-material/Close';
 import { useAuth } from '@/hooks/use-auth';
 import CustomField from '@/components/custom-field';
-import { renderReplies } from './redenReplies';
 import { list } from './redenList';
 
 type Anchor = 'top' | 'left' | 'bottom' | 'right';

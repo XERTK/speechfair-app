@@ -33,7 +33,7 @@ export const isNumber = (value: any) => {
 
 // Check if a value is a number
 export const countWords = (text: string): number => {
-  const words = text.split(/\s+/);
+  const words = text?.split(/\s+/) ?? [];
   return words.length;
 };
 

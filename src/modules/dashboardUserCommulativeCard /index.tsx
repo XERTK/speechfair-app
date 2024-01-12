@@ -1,18 +1,17 @@
 import PropTypes from 'prop-types';
-import ListBulletIcon from '@heroicons/react/24/solid/ListBulletIcon';
+import EqualizerIcon from '@mui/icons-material/Equalizer';
+
 import {
   Avatar,
-  Box,
   Card,
   CardContent,
-  LinearProgress,
   Stack,
   SvgIcon,
   Typography,
 } from '@mui/material';
 
-export const OverviewTasksProgress = (props: any) => {
-  const { value, sx } = props;
+export const DashboardUserCommulativeCard = (props: any) => {
+  const { sx } = props;
 
   return (
     <Card sx={sx}>
@@ -29,9 +28,9 @@ export const OverviewTasksProgress = (props: any) => {
               gutterBottom
               variant="overline"
             >
-              Task Progress
+              Users Cummulative
             </Typography>
-            <Typography variant="h4">{value}%</Typography>
+            <Typography variant="h4"> 2 </Typography>
           </Stack>
           <Avatar
             sx={{
@@ -41,19 +40,15 @@ export const OverviewTasksProgress = (props: any) => {
             }}
           >
             <SvgIcon>
-              <ListBulletIcon />
+              <EqualizerIcon />
             </SvgIcon>
           </Avatar>
         </Stack>
-        <Box sx={{ mt: 3 }}>
-          <LinearProgress value={value} variant="determinate" />
-        </Box>
       </CardContent>
     </Card>
   );
 };
 
-OverviewTasksProgress.propTypes = {
-  value: PropTypes.number.isRequired,
+DashboardUserCommulativeCard.propTypes = {
   sx: PropTypes.object,
 };

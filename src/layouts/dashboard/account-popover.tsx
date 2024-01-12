@@ -14,7 +14,7 @@ import { useAuth } from '@/hooks/use-auth';
 export const AccountPopover = (props: any) => {
   const { anchorEl, onClose, open } = props;
   const router = useRouter();
-  const { logout } = useAuth();
+  const { logout }: any = useAuth();
 
   const handleSignOut = useCallback(() => {
     onClose?.();

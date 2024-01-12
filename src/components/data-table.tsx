@@ -29,6 +29,7 @@ const DataTable = (props: any) => {
     lastVisible,
     onEdit,
     onDelete,
+    isActions,
   } = props;
 
   const [paginationModel, setPaginationModel] = useState({
@@ -106,70 +107,90 @@ const DataTable = (props: any) => {
             Export
           </Button>
         </Stack>
-        <DataGrid
-          autoHeight
-          rows={rows || []}
-          columns={columns.concat({
-            field: 'actions',
-            renderCell: ({ id }: any) => {
-              return (
-                <>
-                  {onEdit && (
-                    <Tooltip title={`edit`} arrow>
-                      <span
-                        onClick={() => {
-                          onEdit(id);
-                        }}
-                      >
-                        <SvgIcon fontSize="small">
-                          <PencilIcon />
-                        </SvgIcon>
-                      </span>
-                    </Tooltip>
-                  )}
-                  {onDelete && (
-                    <Tooltip title={`Delete`} arrow>
-                      <span
-                        style={{
-                          marginLeft: 'auto',
-                          marginRight: '20px',
-                        }}
-                        onClick={() => {
-                          Swal.fire({
-                            title: '<strong>Warning</strong>',
-                            icon: 'warning',
-                            html: 'Are you sure you want to delete this?',
-                            showCloseButton: true,
-                            showCancelButton: true,
-                            focusConfirm: false,
-                            confirmButtonText: 'Yes',
-                            cancelButtonText: 'No',
-                          }).then(async (result: any) => {
-                            if (result.isConfirmed) {
-                              onDelete(id);
-                            }
-                          });
-                        }}
-                      >
-                        <SvgIcon fontSize="small">
-                          <TrashIcon style={{ color: 'red' }} />
-                        </SvgIcon>
-                      </span>
-                    </Tooltip>
-                  )}
-                </>
-              );
-            },
-          })}
-          paginationModel={paginationModel}
-          onPaginationModelChange={setPaginationModel}
-          disableRowSelectionOnClick
-          pageSizeOptions={[5, 10, 20]}
-          pagination
-          paginationMode="server"
-          rowCount={rowCount || 0}
-          sx={{ '& .MuiDataGrid-columnHeaders': { borderRadius: 0 } }}
-        />
+        {isActions ? (
+          <DataGrid
+            autoHeight
+            rows={rows || []}
+            columns={columns.concat({
+              field: 'actions',
+              renderCell: ({ id }: any) => {
+                return (
+                  <>
+                    {onEdit && (
+                      <Tooltip title={`edit`} arrow>
+                        <span
+                          onClick={() => {
+                            onEdit(id);
+                          }}
+                        >
+                          <SvgIcon fontSize="small">
+                            <PencilIcon />
+                          </SvgIcon>
+                        </span>
+                      </Tooltip>
+                    )}
+                    {onDelete && (
+                      <Tooltip title={`Delete`} arrow>
+                        <span
+                          style={{
+                            marginLeft: 'auto',
+                            marginRight: '20px',
+                          }}
+                          onClick={() => {
+                            Swal.fire({
+                              title: '<strong>Warning</strong>',
+                              icon: 'warning',
+                              html: 'Are you sure you want to delete this?',
+                              showCloseButton: true,
+                              showCancelButton: true,
+                              focusConfirm: false,
+                              confirmButtonText: 'Yes',
+                              cancelButtonText: 'No',
+                            }).then(async (result: any) => {
+                              if (result.isConfirmed) {
+                                onDelete(id);
+                              }
+                            });
+                          }}
+                        >
+                          <SvgIcon fontSize="small">
+                            <TrashIcon style={{ color: 'red' }} />
+                          </SvgIcon>
+                        </span>
+                      </Tooltip>
+                    )}
+                  </>
+                );
+              },
+            })}
+            paginationModel={paginationModel}
+            onPaginationModelChange={setPaginationModel}
+            disableRowSelectionOnClick
+            pageSizeOptions={[5, 10, 20]}
+            pagination
+            paginationMode="server"
+            rowCount={rowCount || 0}
+            sx={{
+              '& .MuiDataGrid-columnHeaders': { borderRadius: 0 },
+            }}
+          />
+        ) : (
+          <DataGrid
+            autoHeight
+            rows={rows || []}
+            columns={columns || []}
+            paginationModel={paginationModel}
+            onPaginationModelChange={setPaginationModel}
+            disableRowSelectionOnClick
+            pageSizeOptions={[5, 10, 20]}
+            pagination
+            paginationMode="server"
+            rowCount={rowCount || 0}
+            sx={{
+              '& .MuiDataGrid-columnHeaders': { borderRadius: 0 },
+            }}
+          />
+        )}
       </Card>
     </Stack>
   );

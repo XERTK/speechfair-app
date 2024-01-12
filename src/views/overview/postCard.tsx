@@ -14,21 +14,30 @@ import ThumbUpIcon from '@mui/icons-material/ThumbUpOutlined';
 import ThumbUpIconFilled from '@mui/icons-material/ThumbUp';
 import ThumbDownAltIcon from '@mui/icons-material/ThumbDownOutlined';
 import ThumbDownAltIconFilled from '@mui/icons-material/ThumbDown';
+import BookmarkIcon from '@mui/icons-material/Bookmark';
+import ErrorIcon from '@mui/icons-material/Error';
+
 import {
   Box,
-  Button,
   Card,
   CardContent,
+  IconButton,
+  MenuItem,
   Stack,
   Typography,
+  Menu,
+  Button,
 } from '@mui/material';
 import { useGetPostCommentsCountQuery } from '@/store/comment';
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { useRouter } from 'next/router';
+import Image from 'next/image';
+import { countWords } from '@/utils/helpers';
+import BookmarkMenu from '@/modules/bookmarkMenu';
 
 export interface PostData {
   id: string;
-  brandTo: string;
+  brand: { alias: string };
   region: string;
   tags: string;
   headline: string;
@@ -48,20 +57,19 @@ export const PostCard = (props: { item: PostData }) => {
   if (props.item) {
     postData = props.item;
   }
-  const countWords = (text: string): number => {
-    const words = text.split(/\s+/);
-    return words.length;
-  };
+
+  console.log(JSON.stringify(postData));
 
   const summaryWordCount = postData
     ? countWords(postData.summary)
     : 0;
-
   const summaryWordCountTime = summaryWordCount / 3.5 / 60;
   const roundedTime = summaryWordCountTime.toFixed(1);
 
   const [isThumbUpClicked, setIsThumbUpClicked] = useState(false);
   const [isThumbDownClicked, setIsThumbDownClicked] = useState(false);
+  const [showSaveCard, setShowSaveCard] = React.useState(false); // Add state to manage the SaveCard display
+  const [openMenu, setOpenMenu] = React.useState(false);
 
   const handleThumbUpClick = () => {
     setIsThumbUpClicked(
@@ -85,8 +93,35 @@ export const PostCard = (props: { item: PostData }) => {
     console.log('handleCardIdClick');
     router.push(`/blog/${postData?.id}`);
   };
+  const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(
+    null
+  );
+  const open = Boolean(anchorEl);
+
+  const handleMoreClick = (event: React.MouseEvent<HTMLElement>) => {
+    setAnchorEl(event.currentTarget);
+  };
+  const handleMoreClose = () => {
+    setAnchorEl(null);
+  };
+
+  const handleBookmarkClick = () => {
+    setAnchorEl(null);
+    setShowSaveCard(!showSaveCard);
+  };
+
+  const handleFeedbackClick = () => {
+    setAnchorEl(null);
+  };
+  const handleMenuClose = () => {
+    setShowSaveCard(false);
+  };
   return (
-    <Card>
+    <Card
+      sx={{
+        minWidth: 420,
+      }}
+    >
       <CardContent>
         <Stack
           alignItems="center"
@@ -94,7 +129,12 @@ export const PostCard = (props: { item: PostData }) => {
           justifyContent="space-between"
           spacing={2}
         >
-          <img src={logoImg.src} alt="Logo" width={'37.61px'} />
+          <Image
+            src={logoImg.src}
+            alt="Logo"
+            width={38}
+            height={38}
+          />
           <Stack direction="row" alignItems="center" spacing={1}>
             <StarRateIcon
               sx={{
@@ -106,7 +146,7 @@ export const PostCard = (props: { item: PostData }) => {
               variant="body2"
               sx={{ alignContent: 'center', fontSize: 12 }}
             >
-              {postData?.brandTo}
+              {postData?.brand?.alias || 'N/A'}
             </Typography>
           </Stack>
           <Stack direction="row" alignItems="center" spacing={1}>
@@ -120,7 +160,9 @@ export const PostCard = (props: { item: PostData }) => {
               variant="body2"
               sx={{ alignContent: 'center', fontSize: 12 }}
             >
-              {postData?.region}
+              {postData?.brand
+                ? postData.brand.alias || 'N/A'
+                : 'N/A'}
             </Typography>
           </Stack>
 
@@ -261,7 +303,6 @@ export const PostCard = (props: { item: PostData }) => {
               }}
             />
           )}
-
           {isThumbDownClicked ? (
             <ThumbDownAltIconFilled
               onClick={handleThumbDownClick}
@@ -279,19 +320,38 @@ export const PostCard = (props: { item: PostData }) => {
               }}
             />
           )}
-
           <ReplyIcon
             sx={{
               color: 'black',
               fontSize: '28px',
             }}
           />
-
-          <MoreVertIcon
+          <IconButton
+            onClick={handleMoreClick}
             sx={{
               color: 'black',
               fontSize: '28px',
             }}
+          >
+            <MoreVertIcon />
+          </IconButton>
+          <Menu
+            anchorEl={anchorEl}
+            open={open}
+            onClose={handleMoreClose}
+          >
+            <MenuItem onClick={handleBookmarkClick}>
+              <BookmarkIcon />
+              Bookmark
+            </MenuItem>
+            <MenuItem onClick={handleFeedbackClick}>
+              <ErrorIcon />
+              Report
+            </MenuItem>
+          </Menu>
+          <BookmarkMenu
+            open={showSaveCard}
+            onClose={handleMenuClose}
           />
         </Stack>
       </CardContent>

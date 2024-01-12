@@ -58,18 +58,29 @@ export const postsApi = apiSlice.injectEndpoints({
     getPosts: builder.query({
       async queryFn(params) {
         try {
+          console.log(params.category, 'asfasdfas');
           const postsCollection = collection(db, POSTS_PATH);
           const pagination = params.lastVisible
             ? [startAfter(params.lastVisible)]
             : [];
 
-          const postQuery = query(
+          let postQuery = query(
             postsCollection,
             orderBy('id'),
             where('id', '>=', params.search || ''),
             limit(params.limit),
             ...pagination
           );
+
+          if (params.categoryName) {
+            postQuery = query(
+              postsCollection,
+              orderBy('category'),
+              where('category.name', '==', params.categoryName || ''),
+              limit(params.limit),
+              ...pagination
+            );
+          }
 
           const resultsSnapshot = await getDocs(postQuery);
           const results = resultsSnapshot.docs.map((postDoc) => {

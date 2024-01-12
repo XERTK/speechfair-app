@@ -8,30 +8,29 @@ import { toast } from 'react-toastify';
 import Loader from '@/components/loader';
 import { useRouter } from 'next/router';
 import CustomSelectField from '@/components/custom-select';
-import {
-  AUTH_URL,
-  CONTENT_BRANDS,
-  CONTENT_CATEGORY,
-  CONTENT_REGIONS,
-} from '@/configs/constants';
+
 import Editor from '@/components/lexicalEditor';
 import {
   useCreatePostMutation,
   useUpdatePostMutation,
 } from '@/store/post';
 import { useAuth } from '@/hooks/use-auth';
+import { useGetBrandsQuery } from '@/store/brand';
+import error from 'next/error';
+import { useGetRegionsQuery } from '@/store/region';
+import { useGetCategoriesQuery } from '@/store/category';
 
 interface FormData {
   tags?: string;
   headline: string;
-  brandTo: string;
+  brand: string;
   region: string;
   category: string;
   postBody?: string;
 }
 const schema = yup.object().shape({
   headline: yup.string().required('headline is required'),
-  brandTo: yup.string().required('BRAND is required'),
+  brand: yup.string().required('BRAND is required'),
   region: yup.string().required('REGION is required'),
   category: yup.string().required('CATEGORY is required'),
   tags: yup.string(),
@@ -41,6 +40,10 @@ const schema = yup.object().shape({
 const PostForm: React.FC<{ post: any }> = ({ post }) => {
   const router = useRouter();
 
+  const { data: brandsData } = useGetBrandsQuery<any>({});
+  const { data: regionsData } = useGetRegionsQuery<any>({});
+  const { data: categoriesData } = useGetCategoriesQuery<any>({});
+
   const {
     control,
     handleSubmit,
@@ -49,7 +52,7 @@ const PostForm: React.FC<{ post: any }> = ({ post }) => {
     defaultValues: {
       headline: post?.headline || '',
       tags: post?.tags || '',
-      brandTo: post?.brandTo || '',
+      brand: post?.brand || '',
       category: post?.category || '',
       region: post?.region || '',
     },
@@ -64,36 +67,73 @@ const PostForm: React.FC<{ post: any }> = ({ post }) => {
 
   const onSubmit: SubmitHandler<FormData> = async (data) => {
     try {
+      const brandObject = brandsData?.results.find(
+        (brand: any) => brand.alias === data.brand
+      );
+      const regionObject = regionsData?.results.find(
+        (region: any) => region.alias === data.region
+      );
+      const categoryObject = categoriesData?.results.find(
+        (category: any) => category.id === data.category
+      );
+
       if (post) {
         await updatePost({
           id: post.id,
-          body: data,
+          body: {
+            ...data,
+            brand: brandObject,
+            region: regionObject,
+            category: categoryObject,
+          },
         });
       } else {
         await createPost({
           body: {
             userId: user.id,
             ...data,
+            brand: brandObject,
+            region: regionObject,
+            category: categoryObject,
           },
         });
       }
+
       toast.success('Post updated');
       router.replace(`/admin/posts`);
     } catch (error: any) {
       toast.error(error?.data?.message || error.error);
     }
   };
+  const brandAccess =
+    brandsData?.results.map((brand: any) => ({
+      label: brand.name,
+      value: brand.alias,
+    })) || [];
+  const regionAccess =
+    regionsData?.results.map((region: any) => ({
+      label: region.name,
+      value: region.alias,
+    })) || [];
+  const categoryAccess =
+    categoriesData?.results.map((category: any) => ({
+      label: category.name,
+      value: category.id,
+    })) || [];
+
+  console.log(categoryAccess, 'hello');
+
   return (
     <form onSubmit={handleSubmit(onSubmit)} noValidate>
       <Grid sx={{ mt: 4 }} container spacing={1} direction="column">
         <Grid container direction={'row'} spacing={4}>
           <Grid item xs={12} md={4}>
             <CustomSelectField
-              name="brandTo"
-              label="Switch Brand To"
+              name="brand"
+              label="Switch Brand"
               control={control}
-              error={errors.brandTo}
-              options={CONTENT_BRANDS}
+              error={errors.brand}
+              options={brandAccess}
             />
           </Grid>
 
@@ -103,7 +143,7 @@ const PostForm: React.FC<{ post: any }> = ({ post }) => {
               label="Region"
               control={control}
               error={errors.region}
-              options={CONTENT_REGIONS}
+              options={regionAccess}
             />
           </Grid>
           <Grid item xs={12} md={4}>
@@ -112,7 +152,7 @@ const PostForm: React.FC<{ post: any }> = ({ post }) => {
               label="Category"
               control={control}
               error={errors.category}
-              options={CONTENT_CATEGORY}
+              options={categoryAccess}
             />
           </Grid>
 
@@ -136,9 +176,9 @@ const PostForm: React.FC<{ post: any }> = ({ post }) => {
             />
           </Grid>
         </Grid>
-        <Grid item xs={12} md={4}>
+        {/* <Grid item xs={12} md={4}>
           <Editor />
-        </Grid>
+        </Grid> */}
 
         <Grid item xs={12} md={4}></Grid>
       </Grid>

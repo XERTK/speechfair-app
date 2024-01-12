@@ -26,7 +26,7 @@ const schema = yup.object().shape({
 const LoginPage = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const { login } = useAuth();
+  const { login }: any = useAuth();
 
   const redirect = searchParams?.get('redirect') || '/';
 
@@ -45,8 +45,11 @@ const LoginPage = () => {
   const onSubmit = async (data: FormData) => {
     try {
       console.log(data);
-      await login(data);
+
+      const Login = await login(data);
+      // if (Login) {
       router.push(redirect);
+      // }
     } catch (err: any) {
       console.log('error', err);
       toast.error(err?.data?.message || err.error);
@@ -87,7 +90,7 @@ const LoginPage = () => {
                 Log In
               </Typography>
               <Typography color="text.secondary" variant="body2">
-                Don't have an account?{' '}
+                Don&apos;t have an account?{' '}
                 <NextLink href="/auth/register" passHref>
                   Register
                 </NextLink>

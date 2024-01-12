@@ -17,14 +17,66 @@ import {
   useDeletePostMutation,
   useGetPostsQuery,
 } from '@/store/post';
+import { useGetCategoryQuery } from '@/store/category';
 
 const columns = [
-  { field: 'userId', flex: 1 },
-  { field: 'headline', flex: 1 },
-  { field: 'region', flex: 1 },
-  { field: 'brandTo', flex: 1 },
-  { field: 'status', flex: 1 },
-  { field: 'metrics', flex: 1 },
+  {
+    field: 'userId',
+    flex: 1,
+    headerName: 'User',
+    renderCell: (params: any) => {
+      return params.row.userId;
+    },
+  },
+  {
+    field: 'headline',
+    flex: 1,
+    headerName: 'headline',
+    renderCell: (params: any) => {
+      return params.row.headline;
+    },
+  },
+  {
+    field: 'region',
+    flex: 1,
+    headerName: 'region',
+    renderCell: (params: any) => {
+      return params.row.region.name;
+    },
+  },
+  {
+    field: 'brand',
+    flex: 1,
+    headerName: 'brand',
+    renderCell: (params: any) => {
+      return params.row.brand?.name;
+    },
+  },
+  {
+    field: 'status',
+    flex: 1,
+    headerName: 'status',
+    renderCell: (params: any) => {
+      return params.row.status;
+    },
+  },
+  {
+    field: 'matrix',
+    flex: 1,
+    headerName: 'matrix',
+    renderCell: (params: any) => {
+      return params.row.matrix;
+    },
+  },
+
+  {
+    field: 'category',
+    flex: 1,
+    headerName: 'category',
+    renderCell: (params: any) => {
+      return params.row.category.name;
+    },
+  },
 ];
 
 const PostsPage = () => {
@@ -34,7 +86,8 @@ const PostsPage = () => {
     limit: 5,
   });
 
-  const { data } = useGetPostsQuery<any>(query);
+  const { data } = useGetPostsQuery<any>({});
+  // const { data: categoryData } = useGetCategoryQuery<any>({});
   const [deletePost] = useDeletePostMutation();
 
   console.log('data for the reult', data);
@@ -73,6 +126,7 @@ const PostsPage = () => {
             query={query}
             setQuery={setQuery}
             lastVisible={data?.lastVisible}
+            isActions={true}
             onEdit={(id: any) => {
               router.replace(`/admin/posts/${id}`);
             }}

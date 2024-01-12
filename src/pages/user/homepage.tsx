@@ -7,9 +7,10 @@ import { Swiper, SwiperSlide } from 'swiper/react';
 import 'swiper/css';
 import 'swiper/css/pagination';
 import 'swiper/css/navigation';
-import { Navigation } from 'swiper/modules';
+import { Autoplay, Navigation } from 'swiper/modules';
 import { useState } from 'react';
 import { useGetPostsQuery } from '@/store/post';
+import { style } from '@mui/system';
 
 const HomePage = () => {
   const {
@@ -23,18 +24,10 @@ const HomePage = () => {
     // results?.length ?? 0
     4
   );
-  // console.log(results?.length, 'totlss');
-  // console.log(activeIndex + ' active');
-  // console.log(totalSlides + ' total');
 
   const progress: number =
     ((activeIndex + 1) / (totalSlides - 1)) * 100 || 0;
   const _progress = Math.min(Math.max(0, progress), 100);
-
-  // console.log(progress + ' progress');
-  // console.log(_progress + ' _progress');
-
-  // console.log(results);
 
   return (
     <>
@@ -57,6 +50,10 @@ const HomePage = () => {
 
       <Grid>
         <Swiper
+          autoplay={{
+            delay: 22500,
+            disableOnInteraction: false,
+          }}
           style={{
             padding: '20px',
           }}
@@ -74,7 +71,7 @@ const HomePage = () => {
           }}
           spaceBetween={170}
           navigation={true}
-          modules={[Navigation]}
+          modules={[Navigation, Autoplay]}
           onRealIndexChange={(element) => {
             setActiveIndex(element.activeIndex);
             if (typeof element.params.slidesPerView === 'number') {
@@ -83,8 +80,6 @@ const HomePage = () => {
           }}
         >
           {results?.map((item, index) => {
-            // console.log(index); // Logs the index of the slide
-            // console.log(item); // Logs the index of the slide
             return (
               <SwiperSlide key={item.id}>
                 <Grid xs={12} sm={6} key={item.id}>
